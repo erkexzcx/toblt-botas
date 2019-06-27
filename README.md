@@ -20,7 +20,7 @@ Realiai sugeba viską, ką sugeba žmogus (kad neatrodytų kaip bot'as). Vienint
 
 ŠI PROGRAMA VEIKIA TIK ANT LINUX! Įmanoma užportinti ir ant Windows, tačiau neturiu tam nei noro, nei pačių Windowsų.
 
-**DISCLAIMER**: Šį maven projektą galima lengvai importuoti į naujausią NetBeans IDE ir iš jo leisti. Vienintelis skirtumas - NetBeans reikia leisti su komanda `LC_ALL=C LC_CTYPE=C LC_NUMERIC=C netbeans` (antraip Tesseract aplikacija neveiks ir programa crashins).
+**DISCLAIMER**: Šį maven projektą galima lengvai importuoti į naujausią NetBeans IDE ir iš jos paleisti.
 
 #### 1. Atsisiusti butinus packages ####
 ```
