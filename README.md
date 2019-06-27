@@ -59,7 +59,12 @@ Tada nusistatome su kokiais itemais dirbsime (pvz kasime alava ir gaminsime plyt
 Item ruda = db.getItemById("O1"); // Rūdos ID (paimame is URL). Alavas
 Item plytele = db.getItemById("B1"); // Plyteles ID (paimame is URL). Alavo plytele
 ```
-Tada mes pradesime veiksmavima su tokia komanda:
+Tada sukuriame veiksmų objektus:
+```
+Kasimas kasimas = new Kasimas(player1, ruda);
+Lydimas lydimas = new Lydimas(player1, plytele);
+```
+Galiausiai pradedame veiksmavimą:
 ```
 new KasimasLydimasActivity(p1, kasimas, lydimas, plytele).startThread();
 ```
