@@ -12,6 +12,12 @@
 		<properties>
 			<exec.args>-classpath %classpath core.Main</exec.args>
 			<exec.executable>java</exec.executable>
+			<Env.LC_ALL>C</Env.LC_ALL>
+			<Env.LC_CTYPE>C</Env.LC_CTYPE>
+			<Env.LC_NUMERIC>C</Env.LC_NUMERIC>
+			
+			
+			
 		</properties>
 	</action>
 </actions>

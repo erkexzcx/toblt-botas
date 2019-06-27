@@ -20,10 +20,6 @@ public abstract class ActionBase {
 	protected String getActionUrl() {
 		Element el = doc.selectFirst("a[href*=\"&kd=\"]");
 		if (el == null) {
-			System.out.println("---------------------------------------------");
-			System.out.println(doc.html());
-			System.out.println("---------------------------------------------");
-			player.sendMessage("Checkmate!");
 			System.exit(1);
 			return null;
 		}
