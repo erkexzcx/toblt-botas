@@ -21,16 +21,15 @@ public class TelegramBot extends org.telegram.telegrambots.bots.TelegramLongPoll
 				return lastMessage.trim();
 			}
 
-			// Sleep for 1 sec:
 			try {
-				TimeUnit.MILLISECONDS.sleep(1 * 1000);
+				TimeUnit.SECONDS.sleep(1); // Sleep for 1 sec
 			} catch (InterruptedException ex) {
 				Logger.getLogger(Navigator.class.getName()).log(Level.SEVERE, null, ex);
 			}
 
 		}
 
-		// So user did not respond after certain amount of time - return null:
+		// User did not respond after certain amount of time - return null:
 		return null;
 	}
 

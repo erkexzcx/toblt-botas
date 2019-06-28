@@ -148,6 +148,33 @@ public class Navigator {
 		return doc;
 	}
 
+	public Document navigateForPm(String url) {
+		wait(NAVIGATION_TYPE_REGULAR);
+		try {
+			doc = Jsoup.connect(url).timeout(30 * 1000).userAgent("Mozilla").get();
+		} catch (IOException ex) {
+			sleepSeconds(30);
+			return navigateUnsafe(url);
+		}
+		updateTimestamps();
+
+		if (checkAccountUnavailable()) {
+			player.sendMessage("Account is not playable!");
+			System.exit(1); // TODO
+		} else if (checkTooFast()) {
+			sleepSeconds(30);
+			return navigateForPm(url);
+		} else if (checkOtherLevelsTooLow()) {
+			player.sendMessage("Player's other levels are too low to do current action!");
+			System.exit(1); // TODO
+		} else if (checkAntiBot()) {
+			new AntiBotRoutine(doc, player).perform();
+			return navigateForPm(url);
+		}
+
+		return doc;
+	}
+
 	//==========================================================================
 	private boolean checkAccountUnavailable() {
 		return doc.selectFirst("b:contains(Neteisingas slaptažodis!)") != null
