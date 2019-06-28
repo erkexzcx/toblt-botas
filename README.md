@@ -66,10 +66,10 @@ Galiausiai pradedame veiksmavimą:
 new KasimasLydimasActivity(p1, kasimas, lydimas, plytele).startThread();
 ```
 Paaiskinimas:
-`p1` - zaidejo objektas.
-`kasimas` - vienas is `KasimasLydimasActivity` dalių.
-`lydimas` - vienas is `KasimasLydimasActivity` dalių.
-`plytele` - galutinis veiksmavimo produktas, kuri botas automatiškai pardavinės užsipildžius inventoriui.
+  - `p1` - zaidejo objektas.
+  - `kasimas` - vienas is `KasimasLydimasActivity` dalių.
+  - `lydimas` - vienas is `KasimasLydimasActivity` dalių.
+  - `plytele` - galutinis veiksmavimo produktas, kuri botas automatiškai pardavinės užsipildžius inventoriui.
 
 #### 4. Galimi veiksmavimai ####
 
