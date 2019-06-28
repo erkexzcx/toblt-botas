@@ -1,4 +1,4 @@
-# toblt-botas
+# Tob.lt žaidimo autokėlėjas
 
 Demonstracinė versija. Daug dalykų neužbaigta.
 
