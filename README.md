@@ -1,28 +1,23 @@
 # toblt-botas
 
-Demonstracinė versija - daug dalykų neveikia ir viskas, kas veikia - reikia redaguoti/pasirinkti koreguojant programos kodą. Pats kodas ne stebūklas, bet pasistengiau surašyti komentarus.
+Demonstracinė versija. Daug dalykų neužbaigta, įskaitant paleidimo instrukcijas.
 
-### Ką jis daro?
-Tai yra žaidimo [tob.lt](http://tob.lt/) botas. Jo tikslas - žaisti už jus. :)
+### Galimybės
+  - Veiksmuoti. Daug, įvairiai ir gerai veiksmuoti
+  - Apeiti anti bot patikrinimus
+  - Apeiti žaidimo captchas
+  - Išgyventi tinklo/serverio sutrikimus
+  - Informatuoti per Telegram apie naujas žaidėjų PM
 
-### Ką jis sugeba?
-Realiai sugeba viską, ką sugeba žmogus (kad neatrodytų kaip bot'as). Vienintelė problema - viskas ką jis sugeba tai pagrinde kovoti (veiksmuoti), todėl moderatoriai labai greitai pastebė, kad žaidėjas be jokio levelio padaro 10 000 veiksmų per dieną. :D Apibendrintai botas gali atlikti šiuos veiksmus:
-  - Paziurek `src/main/java/activityTemplates/` direktoriją. Su laiku pridedu naujų.
-  - 100% apeiti anti bot patikrinimus.
-  - Išspręsti žaidimo captchas (pvz įmant iš šiukšlyno daiktus kur reikia įvesti captcha).
-  - Išgyventi tinklo/serverio laikinus sutrikimus (nesustoja jeigu dingtų internetas).
-  - Informuoti viską per Telegram aplikaciją naudojantis bot'u. Kalba eina apie moderatorių žinutes - bot'as parašys jums į PM per Telegram su žinutės tekstu nuo moderatoriaus ir duos 2 minutes atrašyti botui žinutę. Jeigu nespėsite - išsiųs random tekstą, o jei spesite - bot'as nusiųs moderatoriui atgal jūsų parašytą žinutė ir toliau veiksmuos. Profit. :)))
-  - Palaiko neribotą skaičių tob.lt accountų
+### Paleidimo instrukcijos
 
-### Kaip jį pasileisti?
+**DISCLAIMER #1**: Šis projektas nėra užbaigtas ir jame trūksta daug esminių dalykų (pvz konfiguracijos failų), todėl visa žaidimo logika ir boto veiksmavimas nurodomas programos kode, programa yra iš naujo sukompiliuojama ir bot'as arba bot'ai pasileidžia veiksmuoti.
 
-Šis projektas nėra užbaigtas ir jame trūksta daug esminių dalykų (pvz konfiguracijos failų), todėl visa žaidimo logika ir boto veiksmavimas nurodomas programos kode, programa yra iš naujo sukompiliuojama ir bot'as arba bot'ai pasileidžia veiksmuoti.
+**DISCLAIMER #2**: Šią dieną programa veikia tik ant Linux.
 
-ŠI PROGRAMA VEIKIA TIK ANT LINUX! Įmanoma užportinti ir ant Windows, tačiau neturiu tam nei noro, nei pačių Windowsų.
+**DISCLAIMER #3**: Šį maven projektą galima lengvai įimportuoti į naujausią NetBeans IDE ir iš jos paleisti.
 
-**DISCLAIMER**: Šį maven projektą galima lengvai importuoti į naujausią NetBeans IDE ir iš jos paleisti.
-
-#### 1. Atsisiusti butinus packages ####
+#### 1. Atsisiųsti būtinus packages ####
 ```
 # Arch Linux
 sudo pacman -S jdk8-openjdk tesseract tesseract-data-eng tesseract-data-lit imagemagick maven git
@@ -30,39 +25,44 @@ sudo pacman -S jdk8-openjdk tesseract tesseract-data-eng tesseract-data-lit imag
 # Debian 9
 sudo apt-get install openjdk-8-jdk imagemagick tesseract-ocr tesseract-ocr-eng tesseract-ocr-lit maven git
 ```
-#### 2. Atsisiusti tob.lt bota ####
+#### 2. Atsisiųsti šį projektą ####
 ```
 git clone https://github.com/erkexzcx/toblt-botas.git
 cd toblt-botas
 ```
-#### 3. Sukonfiguruoti tob.lt bota ####
-Visa reikiama informacija yra butina uzsipildyti! Persok prie Step #5, kad butu aiskiau :)
+#### 3. Sukonfiguruoti savo botus ####
+Reikia pateikti visas savo detales (telegram, botai ir t.t.). 6 ir 7 žingsnyje yra daugiau info apie botų veiksmavimo galimybes.
 ```
 cp Main.java src/main/java/core/Main.java
 vim src/main/java/core/Main.java
 ```
-#### 4. Paleisti tob.lt bota ####
+#### 4. Paleisti tob.lt botą ####
 ```
 mvn compile
 LC_ALL=C LC_CTYPE=C LC_NUMERIC=C mvn exec:java -Dexec.mainClass=core.Main
 ```
 
-#### 5. Kokie galimi veiksmai? ####
+#### 5. Atnaujinti tob.lt botą ####
+```
+git pull
+```
+
+#### 6. Boto konfigūravimo pavyzdys ####
 
 **Veiksmavimo pakūrimo instrukcija (kasimui + lydimui)**
 Pirmiausia nurodome player objektą (slaptazodi paimame is bet kokio zaidime esancio URL):
 ```
-Player p1 = new Player("nick", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+Player p1 = new Player("nickname", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 ```
-Tada nusistatome su kokiais itemais dirbsime (pvz kasime alava ir gaminsime plyteles:
+Tada nusistatome su kokiais itemais dirbsime (pvz kasime alava ir gaminsime plyteles):
 ```
 Item ruda = db.getItemById("O1"); // Rūdos ID (paimame is URL). Alavas
 Item plytele = db.getItemById("B1"); // Plyteles ID (paimame is URL). Alavo plytele
 ```
 Tada sukuriame veiksmų objektus:
 ```
-Kasimas kasimas = new Kasimas(player1, ruda);
-Lydimas lydimas = new Lydimas(player1, plytele);
+Kasimas kasimas = new Kasimas(p1, ruda);
+Lydimas lydimas = new Lydimas(p1, plytele);
 ```
 Galiausiai pradedame veiksmavimą:
 ```
@@ -72,9 +72,10 @@ Paaiskinimas:
 `p1` - zaidejo objektas.
 `kasimas` - vienas is `KasimasLydimasActivity` dalių.
 `lydimas` - vienas is `KasimasLydimasActivity` dalių.
-`plytele` - galutinis veiksmavimo produktas, kuri botas automatiškai pardavinės.
+`plytele` - galutinis veiksmavimo produktas, kuri botas automatiškai pardavinės užsipildžius inventoriui.
 
-**Galimi veiksmavimai**
+#### 7. Galimi veiksmavimai ####
+
 Kirtimas:
 ```
 Item malka = db.getItemById("MA9"); // Malkos ID (paimame is URL)
@@ -126,19 +127,20 @@ Item[] doNotSellThese = new Item[]{
 new BomzavimasActivity(p1, doNotSellThese).startThread();
 ```
 
-### Ką dar reikia/turėčiau žinoti apie veiksmavimą su bot'u?
-  - Moderatoriai ne kvaili - jeigu su visiškai nauju acc tik kovojat ir surenkat kelis tūkstančius veiksmų nepasikėlę jokio lygio, tai kartais net neklausia ir trina acc. Čia gal net ne moderatoriai, o pats @finx. :)
-  - Kartais galima gaut IP ban.
-  - Moderatoriai ne tik rašo "Tikrinu", bet ir pvz "Parašyk 'Aš ne botas'". Neparašius užbanina.
-  - Visi veiksmuojantys acc turi IP adresų istoriją. Tai reiškia, kad @finx gali lengvai ištrinti visus acc pagal IP adresą.
-  - Niekada nepermetinėkit daiktų/pinigų/kronų iš vieno boto acc į kitą. Moderatoriai juk gali matyti. Tam yra siukslynas - is vieno acc ismeti, is kito paimi.
+### Papildoma informacija apie autokėlėjų naudojimą
+  - Moderatoriai kartais trina jūsų acc net neatsiklausę jeigu paliekate visiškai naują acc tik kovoti ir surenkate kelis tūkstančius veiksmų. Reikia kelti visus lygius po truputį ir viskas bus gerai.
+  - Kartais galima gauti IP ban su acc ištrynimu.
+  - Moderatoriai ne tik rašo "Tikrinu", bet ir pvz "Parašyk 'Aš ne botas'". Neparašius užbanina. Automatizuoti atrašymo **NE-Į-MA-NO-MA**.
+  - Visi veiksmuojantys accountai turi IP adresų istoriją. Tai reiškia, kad @finx gali ištrinti **visus** accountus pagal IP adresą.
+  - Moderatoriai gali skaityti visų žaidėjų PM susirašinėjimus. Tai reiškia, kad mainais persimėtyti pinigus/itemus/kronas negalima. Reikia tai daryti per šiukšlyną (vienas išmeta, kitas paima).
+  
 
-### Papasakok plačiau apie kodą - noriu prisidėti programuodamas X veiksmą
-Visa pagrindinė informacija slypi `src/main/java/core/Main.java` klasėje.
+### Noriu prisidėti prie boto programavimo, bet nesuprantu kaip pradėti.
+Visa pradinė informacija slypi `src/main/java/core/Main.java` klasėje.
 
 Taip pat klasė `src/main/java/core/Player.java` turi visą kritinę bei pagrindinę informaciją reikalingą boto veikimui (pvz telegram bot, db referencai ir t.t.)
 
-Didžiausia boto dalis yra `src/main/java/core/Navigator.java` klasėje. Ši klasė veikia tarsi library boto naršymui ir navigavimui. Taip pat ši klasė automatiškai pasirūpina naujomis PM žinutėmis, anti-bot patikra bei automatiniu palaukimu nuo per greito veiksmų darymo.
+Didžiausia ir sunkiausia boto dalis yra `src/main/java/core/Navigator.java` klasėje. Ši klasė veikia tarsi library boto naršymui ir navigavimui. Taip pat ši klasė automatiškai pasirūpina naujomis PM žinutėmis, anti-bot patikra bei automatiniu palaukimu nuo per greito veiksmų darymo.
 
 O visa kita yra tiesiog unikalūs scriptukai - direktorijoje `src/main/java/actions` yra paprasti "pirmyn-atgal" veiksmai be jokių loop'ų. Loop'ai atliekami iš failų, kurie yra direktorijoje `src/main/java/activityTemplates`.
 
