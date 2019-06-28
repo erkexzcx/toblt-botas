@@ -7,7 +7,7 @@ Demonstracinė versija. Daug dalykų neužbaigta.
   - Apeiti anti bot patikrinimus
   - Apeiti žaidimo captchas
   - Išgyventi tinklo/serverio sutrikimus
-  - Informatuoti per Telegram apie naujas žaidėjų PM
+  - Informuoti per Telegram apie naujas kitų žaidėjų gautas PM
 
 ### Paleidimo instrukcijos
 
