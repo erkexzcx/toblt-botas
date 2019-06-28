@@ -17,7 +17,7 @@ Demonstracinė versija. Daug dalykų neužbaigta, įskaitant paleidimo instrukci
 
 **DISCLAIMER #3**: Šį maven projektą galima lengvai įimportuoti į naujausią NetBeans IDE ir iš jos paleisti.
 
-#### 1. Atsisiųsti būtinus packages ####
+#### 1. Atsisiųsti būtinus dependencies ####
 ```
 # Arch Linux
 sudo pacman -S jdk8-openjdk tesseract tesseract-data-eng tesseract-data-lit imagemagick maven git
@@ -25,29 +25,26 @@ sudo pacman -S jdk8-openjdk tesseract tesseract-data-eng tesseract-data-lit imag
 # Debian 9
 sudo apt-get install openjdk-8-jdk imagemagick tesseract-ocr tesseract-ocr-eng tesseract-ocr-lit maven git
 ```
-#### 2. Atsisiųsti šį projektą ####
+#### 2. Paruošti projektą naudojimui ####
 ```
+# Atsisiunciame bota ir einam i jo dir'a:
 git clone https://github.com/erkexzcx/toblt-botas.git
 cd toblt-botas
-```
-#### 3. Sukonfiguruoti savo botus ####
-Reikia pateikti visas savo detales (telegram, botai ir t.t.). 6 ir 7 žingsnyje yra daugiau info apie botų veiksmavimo galimybes.
-```
+
+# Nukopijuojam faila (just do it):
 cp Main.java src/main/java/core/Main.java
+
+# Pasicustomizinam bota pagal save (daugiau info: step 3 ir step4):
 vim src/main/java/core/Main.java
-```
-#### 4. Paleisti tob.lt botą ####
-```
+
+# Rekompiliuojam bot'a ir paleidziam:
 mvn compile
 LC_ALL=C LC_CTYPE=C LC_NUMERIC=C mvn exec:java -Dexec.mainClass=core.Main
-```
 
-#### 5. Atnaujinti tob.lt botą ####
-```
+# Kartais norime programa atsinaujinti - tai daroma su sita komanda:
 git pull
 ```
-
-#### 6. Boto konfigūravimo pavyzdys ####
+#### 3. Boto konfigūravimo pavyzdys ####
 
 **Veiksmavimo pakūrimo instrukcija (kasimui + lydimui)**
 Pirmiausia nurodome player objektą (slaptazodi paimame is bet kokio zaidime esancio URL):
@@ -74,7 +71,7 @@ Paaiskinimas:
 `lydimas` - vienas is `KasimasLydimasActivity` dalių.
 `plytele` - galutinis veiksmavimo produktas, kuri botas automatiškai pardavinės užsipildžius inventoriui.
 
-#### 7. Galimi veiksmavimai ####
+#### 4. Galimi veiksmavimai ####
 
 Kirtimas:
 ```
