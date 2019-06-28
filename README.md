@@ -39,9 +39,8 @@ cp Main.java src/main/java/core/Main.java
 # Pasicustomizinam bota pagal save (daugiau info: step 3 ir step4):
 vim src/main/java/core/Main.java
 
-# Rekompiliuojam bot'a ir paleidziam:
-mvn compile
-LC_ALL=C LC_CTYPE=C LC_NUMERIC=C mvn exec:java -Dexec.mainClass=core.Main
+# Rekompiliuojam bot'a ir paleidziam (gali uztrukti labai ilgai ant low-end devices):
+./compilerun.sh
 
 # Kartais norime programa atsinaujinti - tai daroma su sita komanda:
 git pull
