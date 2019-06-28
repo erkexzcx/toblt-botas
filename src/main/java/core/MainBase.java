@@ -38,6 +38,7 @@ public class MainBase {
 		Player.setConfig(tb, db);
 		
 		// Run bot:
+		System.out.println("Program started!");
 		new Main().setup(db);
 	}
 	
