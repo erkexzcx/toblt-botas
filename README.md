@@ -29,6 +29,8 @@ sudo apt-get install openjdk-8-jdk tesseract-ocr tesseract-ocr-eng tesseract-ocr
 ```
 # Atsisiunciame bota ir einam i jo dir'a:
 git clone https://github.com/erkexzcx/toblt-botas.git
+
+# Einam i programos direktorija:
 cd toblt-botas
 
 # Nukopijuojam faila (just do it):
