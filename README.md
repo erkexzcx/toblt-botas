@@ -88,6 +88,12 @@ Kirtimas k = new Kirtimas(p1, malka);
 Crafting c = new Crafting(p1, lankas);
 new KirtimasCraftingasActivity(p1, k, c, lankas).startThread();
 ```
+Kasimas:
+```
+Item ruda = db.getItemById("O3");
+Kasimas kasimas = new Kasimas(p1, ruda);
+new KasimasActivity(p1, kasimas, ruda).startThread();
+```
 Kasimas + Lydimas:
 ```
 Item ruda = db.getItemById("O3"); // Rūdos ID (paimame is URL). Molis
