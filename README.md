@@ -1,6 +1,6 @@
 # toblt-botas
 
-Demonstracinė versija. Daug dalykų neužbaigta, įskaitant paleidimo instrukcijas.
+Demonstracinė versija. Daug dalykų neužbaigta.
 
 ### Galimybės
   - Veiksmuoti. Daug, įvairiai ir gerai veiksmuoti
