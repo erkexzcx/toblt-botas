@@ -23,7 +23,7 @@ Demonstracinė versija. Daug dalykų neužbaigta.
 sudo pacman -S jdk8-openjdk tesseract tesseract-data-eng tesseract-data-lit imagemagick maven git
 
 # Debian 9
-sudo apt-get install openjdk-8-jdk imagemagick tesseract-ocr tesseract-ocr-eng tesseract-ocr-lit maven git
+sudo apt-get install openjdk-8-jdk tesseract-ocr tesseract-ocr-eng tesseract-ocr-lit imagemagick maven git
 ```
 #### 2. Paruošti projektą naudojimui ####
 ```
