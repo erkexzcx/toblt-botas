@@ -32,6 +32,7 @@ public class KasimasActivity extends ActivityBase {
 					stopFlag = true;
 					break;
 				case Kasimas.RESULT_INVENTORY_FULL:
+					bot.shop().sellEverythingByCategory("neapdirbtas brangakmenis");
 					shop.sell(itemToSell);
 					break;
 			}

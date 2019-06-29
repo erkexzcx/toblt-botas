@@ -19,7 +19,7 @@ public class Shop {
 	}
 
 	public void sell(Item item) {
-		
+
 		if (!item.isSellable() || item.getSellUrl() == null) {
 			// Gotta sell in quick shop, since we can't sell it in regular shop (e.g. keys):
 			sellItemQuick(item);
@@ -42,7 +42,9 @@ public class Shop {
 					break;
 				}
 			}
-			if (inList) { continue; }
+			if (inList) {
+				continue;
+			}
 			sell(itm);
 
 		}
@@ -75,6 +77,16 @@ public class Shop {
 					{"null", "Parduoti"}
 				}
 		);
+	}
+
+	public void sellEverythingByCategory(String category) {
+		List<Item> items = bot.inventory().getAll();
+		for (Item item : items) {
+			if (!item.getCategory().equals(category)) {
+				continue;
+			}
+			sell(item);
+		}
 	}
 
 }
