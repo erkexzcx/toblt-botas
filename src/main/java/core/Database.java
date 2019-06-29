@@ -29,11 +29,15 @@ public class Database {
 			pstmt.setString(1, id);
 			ResultSet rs = pstmt.executeQuery();
 			if (!rs.next()) {
-				return null; // no item found in DB
+				System.out.println("No such item found in DB: " + id);
+				System.exit(1);
 			}
 			return new Item(
 					rs.getString("id"),
 					rs.getString("title"),
+					rs.getString("category"),
+					rs.getInt("required_skill_level"),
+					rs.getBoolean("sellable"),
 					rs.getString("buy_url"),
 					rs.getString("sell_url")
 			);

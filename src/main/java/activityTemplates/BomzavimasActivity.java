@@ -16,12 +16,12 @@ public class BomzavimasActivity extends ActivityBase {
 	private static final Pattern EXTRACT_DETAILS_PATTERN = Pattern.compile("Yra šiukšlyne:\\s+<b>(\\d+)</b>\\s+<br> Laisvos vietos inventoriuje:\\s+<b>(\\d+)</b>", Pattern.MULTILINE);
 	private static final String TRASH_BASE_URL = "http://tob.lt/zaisti.php?{CREDENTIALS}&id=siuksl";
 
-	public BomzavimasActivity(Player player, Item[] doNotSellList) {
-		super(player);
+	public BomzavimasActivity(Bot bot, Item[] doNotSellList) {
+		super(bot);
 		this.doNotSellList = doNotSellList;
-		baseUrl = player.insertCredentials(TRASH_BASE_URL);
+		baseUrl = bot.insertCredentials(TRASH_BASE_URL);
 
-		shop = new Shop(player);
+		shop = new Shop(bot);
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class BomzavimasActivity extends ActivityBase {
 
 		while (!stopFlag) {
 
-			doc = player.navigator().navigate(baseUrl, Navigator.NAVIGATION_TYPE_REGULAR);
+			doc = bot.navigator().navigate(baseUrl, Navigator.NAVIGATION_TYPE_REGULAR);
 
 			// Find URL to first item in trash:
 			Element el = doc.selectFirst("a[href*=\"id=imtsl&ka=\"]");
@@ -39,12 +39,12 @@ public class BomzavimasActivity extends ActivityBase {
 			String trashUrl = el.attr("abs:href");
 
 			// Go to your found item:
-			doc = player.navigator().navigate(trashUrl, Navigator.NAVIGATION_TYPE_REGULAR);
+			doc = bot.navigator().navigate(trashUrl, Navigator.NAVIGATION_TYPE_REGULAR);
 
 			// Let's parse some numbers so we know how much we can pick. :)
 			Matcher m = EXTRACT_DETAILS_PATTERN.matcher(doc.html());
 			if (!m.find()) {
-				player.sendMessage("Regex doesn't work... fix your code!");
+				bot.sendMessage("Regex doesn't work... fix your code!");
 				break;
 			}
 			int maxToPick = Integer.parseInt(m.group(1));
@@ -63,7 +63,7 @@ public class BomzavimasActivity extends ActivityBase {
 			String numbersFromCaptcha = CaptchaUtils.readNumbersFromCaptcha(processedCaptchaImageFile);
 
 			// Now submit it:
-			doc = player.navigator().postRequest(
+			doc = bot.navigator().postRequest(
 					trashUrl.replace("&id=imtsl&", "&id=imtsl2&"),
 					new String[][]{
 						{"kiekis", String.format("%d", amountToTake)},
@@ -74,7 +74,7 @@ public class BomzavimasActivity extends ActivityBase {
 
 		}
 
-		player.sendMessage("Stopped! 👎");
+		bot.sendMessage("Stopped! 👎");
 	}
 
 }

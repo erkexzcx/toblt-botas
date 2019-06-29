@@ -4,10 +4,10 @@ import core.*;
 
 abstract class Routine {
 
-	protected final Player player;
+	protected final Bot bot;
 
-	public Routine(Player player) {
-		this.player = player;
+	public Routine(Bot bot) {
+		this.bot = bot;
 	}
 
 	public abstract void perform();

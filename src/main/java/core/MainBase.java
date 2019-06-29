@@ -34,8 +34,8 @@ public class MainBase {
 		// Set up db connection:
 		Database db = new Database();
 		
-		// Update static objects in Player class:
-		Player.setConfig(tb, db);
+		// Update static objects in Bot class:
+		Bot.setConfig(tb, db);
 		
 		// Run bot:
 		System.out.println("Program started!");

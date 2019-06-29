@@ -11,13 +11,13 @@ public class KasimasLydimasActivity extends ActivityBase {
 	private final Item itemToSell;
 	private final Shop shop;
 
-	public KasimasLydimasActivity(Player player, Kasimas kasimas, Lydimas lydimas, Item itemToSell) {
-		super(player);
+	public KasimasLydimasActivity(Bot bot, Kasimas kasimas, Lydimas lydimas, Item itemToSell) {
+		super(bot);
 		this.kasimas = kasimas;
 		this.lydimas = lydimas;
 		this.itemToSell = itemToSell;
 
-		shop = new Shop(player);
+		shop = new Shop(bot);
 	}
 
 	@Override
@@ -26,11 +26,11 @@ public class KasimasLydimasActivity extends ActivityBase {
 
 			switch (kasimas.perform()) {
 				case Kasimas.RESULT_NO_PICKAXE:
-					player.sendMessage("Don't have required pickaxe... :(");
+					bot.sendMessage("Don't have required pickaxe... :(");
 					stopFlag = true;
 					break;
 				case Kasimas.RESULT_LEVEL_TOO_LOW:
-					player.sendMessage("Mining level is too low... :(");
+					bot.sendMessage("Mining level is too low... :(");
 					stopFlag = true;
 					break;
 				case Kasimas.RESULT_INVENTORY_FULL:
@@ -46,7 +46,7 @@ public class KasimasLydimasActivity extends ActivityBase {
 
 			switch (lydimas.perform()) {
 				case Lydimas.RESULT_LEVEL_TOO_LOW:
-					player.sendMessage("Kalvininkavimas level is too low... :(");
+					bot.sendMessage("Kalvininkavimas level is too low... :(");
 					stopFlag = true;
 					break;
 				case Lydimas.RESULT_NOT_ENOUGH_RESOURCES:

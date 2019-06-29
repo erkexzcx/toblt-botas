@@ -11,19 +11,19 @@ public class Kirtimas extends ActionBase {
 
 	private static final String KIRSTI_BASE_URL = "http://tob.lt/miskas.php?{CREDENTIALS}&id=kertu&ka=";
 
-	public Kirtimas(Player player, Item medis) {
+	public Kirtimas(Bot bot, Item medis) {
 		super(
-				player,
-				player.insertCredentials(KIRSTI_BASE_URL + medis.getId())
+				bot,
+				bot.insertCredentials(KIRSTI_BASE_URL + medis.getId())
 		);
 	}
 
 	public int perform() {
 
-		doc = player.navigator().navigate(baseUrl, Navigator.NAVIGATION_TYPE_REGULAR);
+		doc = bot.navigator().navigate(baseUrl, Navigator.NAVIGATION_TYPE_REGULAR);
 
 		String nextUrl = getActionUrl();
-		doc = player.navigator().navigate(nextUrl, Navigator.NAVIGATION_TYPE_ACTION);
+		doc = bot.navigator().navigate(nextUrl, Navigator.NAVIGATION_TYPE_ACTION);
 
 		if (doc.html().contains("Neturite reikiamo kirvio.")) {
 			return RESULT_NO_AXE;

@@ -1,7 +1,7 @@
 package subroutines;
 
 import core.Navigator;
-import core.Player;
+import core.Bot;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jsoup.nodes.Document;
@@ -12,16 +12,16 @@ public class DropAllItems extends Routine {
 	private final String inventoryUrl;
 	private static final Pattern EXTRACT_AMOUNT_PATTERN = Pattern.compile("Kiekis:\\s+<b>(\\d+)</b>", Pattern.MULTILINE);
 
-	public DropAllItems(Player player) {
-		super(player);
-		inventoryUrl = player.insertCredentials("http://tob.lt/zaisti.php?{CREDENTIALS}&id=inventory&page=1");
+	public DropAllItems(Bot bot) {
+		super(bot);
+		inventoryUrl = bot.insertCredentials("http://tob.lt/zaisti.php?{CREDENTIALS}&id=inventory&page=1");
 	}
 
 	@Override
 	public void perform() {
 
 		// Go to inventory:
-		Document doc = player.navigator().navigate(inventoryUrl, Navigator.NAVIGATION_TYPE_REGULAR);
+		Document doc = bot.navigator().navigate(inventoryUrl, Navigator.NAVIGATION_TYPE_REGULAR);
 
 		// Select all elements that we are going to use:
 		Elements elements = doc.select("div.send");
@@ -32,13 +32,13 @@ public class DropAllItems extends Routine {
 			// Get droppable amount:
 			Matcher m = EXTRACT_AMOUNT_PATTERN.matcher(e.html());
 			if (!m.find()) {
-				player.sendMessage("Regex doesn't work in kovojimas activity... fix your code!");
+				bot.sendMessage("Regex doesn't work in kovojimas activity... fix your code!");
 				System.exit(1);
 			}
 			int droppableAmount = Integer.parseInt(m.group(1));
 
 			// Drop it:
-			player.navigator().postRequest(
+			bot.navigator().postRequest(
 					dropUrl2,
 					new String[][]{
 						{"kiekis", String.format("%d", droppableAmount)},

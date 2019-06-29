@@ -1,38 +1,41 @@
 package core;
 
-public class Player {
+import misc.*;
+
+public class Bot {
 
 	private final String nick;
 	private final String pass;
+	private final Shop shop;
+	private final Inventory inventory;
+	private final Player player;
 	private static TelegramBot telegramBot;
 	private static Database database;
 
-	// Each player also contains its own Navigator.
+	// Each bot also contains its own Navigator.
 	private final Navigator navigator;
 
-	public Player(String nick, String pass) {
+	public Bot(String nick, String pass) {
 		this.nick = nick;
 		this.pass = pass;
 
 		navigator = new Navigator(this);
+		shop = new Shop(this);
+		inventory = new Inventory(this);
+		player = new Player(this);
 	}
 
 	public static void setConfig(TelegramBot tb, Database db) {
-		Player.telegramBot = tb;
-		Player.database = db;
+		Bot.telegramBot = tb;
+		Bot.database = db;
 	}
 
-	public Navigator navigator() {
-		return navigator;
-	}
-
-	public Database database() {
-		return database;
-	}
-
-	public synchronized String getUserReply() {
-		return telegramBot.getLastMessage();
-	}
+	public Navigator navigator() { return navigator; }
+	public Shop shop(){ return shop; }
+	public Inventory inventory(){ return inventory; }
+	public Database database() { return database; }
+	public TelegramBot telegramBot() { return telegramBot; }
+	public Player player() { return player; }
 
 	public synchronized void sendMessage(String message) {
 		telegramBot.sendMessage("<b>" + nick + "</b>: " + message);

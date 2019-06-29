@@ -10,11 +10,11 @@ import subroutines.*;
 
 public class Navigator {
 
-	public Navigator(Player player) {
-		this.player = player;
+	public Navigator(Bot bot) {
+		this.bot = bot;
 	}
 
-	private final Player player;
+	private final Bot bot;
 
 	private Document doc = new Document("");
 
@@ -88,20 +88,20 @@ public class Navigator {
 		updateTimestamps();
 
 		if (checkAccountUnavailable()) {
-			player.sendMessage("Account is not playable!");
+			bot.sendMessage("Account is not playable!");
 			System.exit(1); // TODO
 		} else if (checkTooFast()) {
 			sleepSeconds(30);
 			return navigate(url, navigationType);
 		} else if (checkOtherLevelsTooLow()) {
-			player.sendMessage("Player's other levels are too low to do current action!");
+			bot.sendMessage("Bot's other levels are too low to do current action!");
 			System.exit(1); // TODO
 		} else if (checkAntiBot()) {
-			new AntiBotRoutine(doc, player).perform();
+			new AntiBotRoutine(doc, bot).perform();
 			return navigate(url, navigationType);
 		} else if (checkNewPm()) {
 			Document tmpdoc = doc.clone();
-			new NewPMRoutine(player).perform();
+			new NewPMRoutine(bot).perform();
 			doc = tmpdoc;
 		}
 
@@ -159,16 +159,16 @@ public class Navigator {
 		updateTimestamps();
 
 		if (checkAccountUnavailable()) {
-			player.sendMessage("Account is not playable!");
+			bot.sendMessage("Account is not playable!");
 			System.exit(1); // TODO
 		} else if (checkTooFast()) {
 			sleepSeconds(30);
 			return navigateForPm(url);
 		} else if (checkOtherLevelsTooLow()) {
-			player.sendMessage("Player's other levels are too low to do current action!");
+			bot.sendMessage("Bot's other levels are too low to do current action!");
 			System.exit(1); // TODO
 		} else if (checkAntiBot()) {
-			new AntiBotRoutine(doc, player).perform();
+			new AntiBotRoutine(doc, bot).perform();
 			return navigateForPm(url);
 		}
 

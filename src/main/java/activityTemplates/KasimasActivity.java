@@ -10,12 +10,12 @@ public class KasimasActivity extends ActivityBase {
 	private final Item itemToSell;
 	private final Shop shop;
 
-	public KasimasActivity(Player player, Kasimas kasimas, Item itemToSell) {
-		super(player);
+	public KasimasActivity(Bot bot, Kasimas kasimas, Item itemToSell) {
+		super(bot);
 		this.kasimas = kasimas;
 		this.itemToSell = itemToSell;
 
-		shop = new Shop(player);
+		shop = new Shop(bot);
 	}
 
 	@Override
@@ -24,11 +24,11 @@ public class KasimasActivity extends ActivityBase {
 
 			switch (kasimas.perform()) {
 				case Kasimas.RESULT_NO_PICKAXE:
-					player.sendMessage("Don't have required pickaxe... :(");
+					bot.sendMessage("Don't have required pickaxe... :(");
 					stopFlag = true;
 					break;
 				case Kasimas.RESULT_LEVEL_TOO_LOW:
-					player.sendMessage("Mining level is too low... :(");
+					bot.sendMessage("Mining level is too low... :(");
 					stopFlag = true;
 					break;
 				case Kasimas.RESULT_INVENTORY_FULL:

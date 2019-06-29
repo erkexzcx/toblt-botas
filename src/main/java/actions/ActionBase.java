@@ -1,6 +1,6 @@
 package actions;
 
-import core.Player;
+import core.Bot;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
@@ -9,11 +9,11 @@ public abstract class ActionBase {
 	public static final String CREDENTIALS_TEMPLATE = "{CREDENTIALS}";
 
 	protected Document doc;
-	protected Player player;
+	protected Bot bot;
 	protected final String baseUrl;
 
-	public ActionBase(Player player, String baseUrl) {
-		this.player = player;
+	public ActionBase(Bot bot, String baseUrl) {
+		this.bot = bot;
 		this.baseUrl = baseUrl;
 	}
 

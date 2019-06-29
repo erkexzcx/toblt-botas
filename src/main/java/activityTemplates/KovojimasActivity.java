@@ -1,14 +1,14 @@
 package activityTemplates;
 
 import actions.Kovojimas;
-import core.Player;
+import core.Bot;
 
 public class KovojimasActivity extends ActivityBase {
 
 	private final Kovojimas kovojimas;
 
-	public KovojimasActivity(Player player, Kovojimas kovojimas) {
-		super(player);
+	public KovojimasActivity(Bot bot, Kovojimas kovojimas) {
+		super(bot);
 		this.kovojimas = kovojimas;
 	}
 

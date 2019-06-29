@@ -8,6 +8,7 @@ Demonstracinė versija. Daug dalykų neužbaigta.
   - Apeiti žaidimo captchas
   - Išgyventi tinklo/serverio sutrikimus
   - Informuoti per Telegram apie naujas kitų žaidėjų gautas PM
+  - Palaiko neribotą bot'ų skaičių
 
 ### Paleidimo instrukcijos
 
@@ -48,9 +49,9 @@ git pull
 #### 3. Boto konfigūravimo pavyzdys ####
 
 **Veiksmavimo pakūrimo instrukcija (kasimui + lydimui)**
-Pirmiausia nurodome player objektą (slaptazodi paimame is bet kokio zaidime esancio URL):
+Pirmiausia nurodome bot objektą (slaptazodi paimame is bet kokio zaidime esancio URL):
 ```
-Player p1 = new Player("nickname", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+Bot b1 = new Bot("nickname", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 ```
 Tada nusistatome su kokiais itemais dirbsime (pvz kasime alava ir gaminsime plyteles):
 ```
@@ -59,15 +60,15 @@ Item plytele = db.getItemById("B1"); // Plyteles ID (paimame is URL). Alavo plyt
 ```
 Tada sukuriame veiksmų objektus:
 ```
-Kasimas kasimas = new Kasimas(p1, ruda);
-Lydimas lydimas = new Lydimas(p1, plytele);
+Kasimas kasimas = new Kasimas(b1, ruda);
+Lydimas lydimas = new Lydimas(b1, plytele);
 ```
 Galiausiai pradedame veiksmavimą:
 ```
-new KasimasLydimasActivity(p1, kasimas, lydimas, plytele).startThread();
+new KasimasLydimasActivity(b1, kasimas, lydimas, plytele).startThread();
 ```
 Paaiskinimas:
-  - `p1` - zaidejo objektas.
+  - `b1` - zaidejo objektas.
   - `kasimas` - vienas is `KasimasLydimasActivity` dalių.
   - `lydimas` - vienas is `KasimasLydimasActivity` dalių.
   - `plytele` - galutinis veiksmavimo produktas, kuri botas automatiškai pardavinės užsipildžius inventoriui.
@@ -77,45 +78,51 @@ Paaiskinimas:
 Kirtimas:
 ```
 Item malka = db.getItemById("MA9"); // Malkos ID (paimame is URL)
-Kirtimas k = new Kirtimas(p1, malka);
-new KirtimasActivity(p1, k, malka).startThread();
+Kirtimas k = new Kirtimas(b1, malka);
+new KirtimasActivity(b1, k, malka).startThread();
 ```
 Kirtimas + Craftingas:
 ```
 Item malka = db.getItemById("MA5"); // Malkos ID (paimame is URL)
 Item lankas = db.getItemById("L5"); // Lanko ID (paimame is URL). Turi but butinai lankas!
-Kirtimas k = new Kirtimas(p1, malka);
-Crafting c = new Crafting(p1, lankas);
-new KirtimasCraftingasActivity(p1, k, c, lankas).startThread();
+Kirtimas k = new Kirtimas(b1, malka);
+Crafting c = new Crafting(b1, lankas);
+new KirtimasCraftingasActivity(b1, k, c, lankas).startThread();
 ```
 Kasimas:
 ```
 Item ruda = db.getItemById("O3");
-Kasimas kasimas = new Kasimas(p1, ruda);
-new KasimasActivity(p1, kasimas, ruda).startThread();
+Kasimas kasimas = new Kasimas(b1, ruda);
+new KasimasActivity(b1, kasimas, ruda).startThread();
 ```
 Kasimas + Lydimas:
 ```
 Item ruda = db.getItemById("O3"); // Rūdos ID (paimame is URL). Molis
 Item plytele = db.getItemById("B4"); // Plyteles ID (paimame is URL). Plyta
-Kasimas kasimas = new Kasimas(player1, ruda);
-Lydimas lydimas = new Lydimas(player1, plytele);
-new KasimasLydimasActivity(player1, kasimas, lydimas, plytele).startThread();
+Kasimas kasimas = new Kasimas(b1, ruda);
+Lydimas lydimas = new Lydimas(b1, plytele);
+new KasimasLydimasActivity(b1, kasimas, lydimas, plytele).startThread();
 ```
 Kasimas + Lydimas + Kaldinimas:
 ```
 Item ruda = db.getItemById("O1"); // Rūdos ID (paimame is URL). Alavas
 Item plytele = db.getItemById("B1"); // Plyteles ID (paimame is URL). Alavo plytele
 Item kardas = db.getItemById("K1"); // Ginklo ID (paimame is URL). Alavo durklas
-Kasimas kasimas = new Kasimas(p1, ruda);
-Lydimas lydimas = new Lydimas(p1, plytele);
-Kaldinimas kaldinimas = new Kaldinimas(p1, kardas);
-new KasimasLydimasKaldinimasActivity(p1, kasimas, lydimas, kaldinimas, kardas).startThread();
+Kasimas kasimas = new Kasimas(b1, ruda);
+Lydimas lydimas = new Lydimas(b1, plytele);
+Kaldinimas kaldinimas = new Kaldinimas(b1, kardas);
+new KasimasLydimasKaldinimasActivity(b1, kasimas, lydimas, kaldinimas, kardas).startThread();
 ```
 Kovojimas:
 ```
-Kovojimas k = new Kovojimas(p1, Kovojimas.PRIESAS_ZIURKE); // Kolkas tik ziurke
-new KovojimasActivity(p1, k).startThread();
+Kovojimas k = new Kovojimas(b1, Kovojimas.PRIESAS_ZIURKE); // Kolkas tik ziurke
+new KovojimasActivity(b1, k).startThread();
+```
+Slayer + Kovojimas:
+```
+Slayer slayer = new Slayer(b1, Slayer.KILL_1_10);
+Kovojimas kovojimas = new Kovojimas(b1, Kovojimas.PRIESAS_ZIURKE); // Kolkas tik ziurke
+new SlayerKovojimasActivity(b1, slayer, kovojimas).startThread();
 ```
 Šiukšlyno daigtų surinkinėjimas ir pardavinėjimas, pasiliekant kai kuriuos daiktus:
 ```
@@ -128,7 +135,7 @@ Item[] doNotSellThese = new Item[]{
   new Item("KEY5"),
   new Item("KEY6")
 };
-new BomzavimasActivity(p1, doNotSellThese).startThread();
+new BomzavimasActivity(b1, doNotSellThese).startThread();
 ```
 
 ### Papildoma informacija apie autokėlėjų naudojimą
@@ -142,7 +149,7 @@ new BomzavimasActivity(p1, doNotSellThese).startThread();
 ### Noriu prisidėti prie boto programavimo, bet nesuprantu kaip pradėti.
 Visa pradinė informacija slypi `src/main/java/core/Main.java` klasėje.
 
-Taip pat klasė `src/main/java/core/Player.java` turi visą kritinę bei pagrindinę informaciją reikalingą boto veikimui (pvz telegram bot, db referencai ir t.t.)
+Taip pat klasė `src/main/java/core/Bot.java` turi visą kritinę bei pagrindinę informaciją reikalingą boto veikimui (pvz telegram bot, db referencai ir t.t.)
 
 Didžiausia ir sunkiausia boto dalis yra `src/main/java/core/Navigator.java` klasėje. Ši klasė veikia tarsi library boto naršymui ir navigavimui. Taip pat ši klasė automatiškai pasirūpina naujomis PM žinutėmis, anti-bot patikra bei automatiniu palaukimu nuo per greito veiksmų darymo.
 

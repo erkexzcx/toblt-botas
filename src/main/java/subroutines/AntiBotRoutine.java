@@ -38,10 +38,10 @@ public class AntiBotRoutine extends Routine {
 	/**
 	 * @param doc Must be the document containing detected anti bot check
 	 * screen.
-	 * @param player Player object.
+	 * @param bot Bot object.
 	 */
-	public AntiBotRoutine(Document doc, Player player) {
-		super(player);
+	public AntiBotRoutine(Document doc, Bot bot) {
+		super(bot);
 		this.doc = doc;
 	}
 
@@ -70,8 +70,8 @@ public class AntiBotRoutine extends Routine {
 		}
 		// Here we check if it's null. We might intentionally set it to null (means it might not be due to exception):
 		if (colorText == null) {
-			player.sendMessage("Anti bot routine failed (while trying to read color's text). Clicking on the first image in the list...");
-			player.navigator().navigateUnsafe(doc.selectFirst("img[src^=\"antibotimg.php?\"]").parent().attr("abs:href"));
+			bot.sendMessage("Anti bot routine failed (while trying to read color's text). Clicking on the first image in the list...");
+			bot.navigator().navigateUnsafe(doc.selectFirst("img[src^=\"antibotimg.php?\"]").parent().attr("abs:href"));
 			return;
 		}
 
@@ -109,16 +109,16 @@ public class AntiBotRoutine extends Routine {
 			Document result;
 			if (imageToClickMD5.equals(colorTextMD5)) {
 				String confirmedImageToClickUrl = img.parent().attr("abs:href");
-				result = player.navigator().navigateUnsafe(confirmedImageToClickUrl);
+				result = bot.navigator().navigateUnsafe(confirmedImageToClickUrl);
 				if (result.selectFirst(":contains(Galite žaisti toliau.)") == null) {
-					player.sendMessage("Anti bot routine failed (Incorrect color clicked!)");
+					bot.sendMessage("Anti bot routine failed (Incorrect color clicked!)");
 					break;
 				}
 				return;
 			}
 		}
 
-		player.sendMessage("Anti bot routine failed (Unable to find correct color)");
+		bot.sendMessage("Anti bot routine failed (Unable to find correct color)");
 	}
 
 	/**

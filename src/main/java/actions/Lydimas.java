@@ -10,23 +10,23 @@ public class Lydimas extends ActionBase {
 
 	public static final String LYDITI_BASE_URL = "http://tob.lt/kasimas_kalve.php?{CREDENTIALS}&id=lydau0&ka=";
 
-	public Lydimas(Player player, Item ruda) {
+	public Lydimas(Bot bot, Item ruda) {
 		super(
-				player,
-				player.insertCredentials(LYDITI_BASE_URL + ruda.getId())
+				bot,
+				bot.insertCredentials(LYDITI_BASE_URL + ruda.getId())
 		);
 	}
 
 	public int perform() {
 
-		doc = player.navigator().navigate(baseUrl, Navigator.NAVIGATION_TYPE_REGULAR);
+		doc = bot.navigator().navigate(baseUrl, Navigator.NAVIGATION_TYPE_REGULAR);
 
 		if (doc.html().contains("Nepakanka žaliavų!")) {
 			return RESULT_NOT_ENOUGH_RESOURCES;
 		}
 
 		String nextUrl = getActionUrl();
-		doc = player.navigator().navigate(nextUrl, Navigator.NAVIGATION_TYPE_ACTION);
+		doc = bot.navigator().navigate(nextUrl, Navigator.NAVIGATION_TYPE_ACTION);
 
 		if (doc.html().contains("Kalvininkavimo lygis per žemas!")) {
 			return RESULT_LEVEL_TOO_LOW;

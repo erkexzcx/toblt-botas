@@ -11,19 +11,19 @@ public class Kasimas extends ActionBase {
 
 	public static final String KASTI_BASE_URL = "http://tob.lt/kasimas_kalve.php?{CREDENTIALS}&id=mininu0&ka=";
 
-	public Kasimas(Player player, Item ruda) {
+	public Kasimas(Bot bot, Item ruda) {
 		super(
-				player,
-				player.insertCredentials(KASTI_BASE_URL + ruda.getId())
+				bot,
+				bot.insertCredentials(KASTI_BASE_URL + ruda.getId())
 		);
 	}
 
 	public int perform() {
 
-		doc = player.navigator().navigate(baseUrl, Navigator.NAVIGATION_TYPE_REGULAR);
+		doc = bot.navigator().navigate(baseUrl, Navigator.NAVIGATION_TYPE_REGULAR);
 
 		String nextUrl = getActionUrl();
-		doc = player.navigator().navigate(nextUrl, Navigator.NAVIGATION_TYPE_ACTION);
+		doc = bot.navigator().navigate(nextUrl, Navigator.NAVIGATION_TYPE_ACTION);
 
 		if (doc.html().contains("Neturite reikalingo kirtiklio!")) {
 			return RESULT_NO_PICKAXE;

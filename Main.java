@@ -13,7 +13,7 @@ public class Main {
 	public void setup(Database db) {
 		//----------------------------------------------------------------------
 		
-		Player p1 = new Player("nick", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+		Bot p1 = new Bot("nick", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 		
 		Kovojimas k = new Kovojimas(p1, Kovojimas.PRIESAS_ZIURKE);
 		new KovojimasActivity(p1, k).startThread();

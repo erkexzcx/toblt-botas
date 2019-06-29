@@ -32,6 +32,10 @@ public class TelegramBot extends org.telegram.telegrambots.bots.TelegramLongPoll
 		// User did not respond after certain amount of time - return null:
 		return null;
 	}
+	
+	public synchronized String getUserReply() {
+		return getLastMessage();
+	}
 
 	@Override
 	public String getBotToken() {

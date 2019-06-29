@@ -10,12 +10,12 @@ public class KirtimasActivity extends ActivityBase {
 	private final Item itemToSell;
 	private final Shop shop;
 
-	public KirtimasActivity(Player player, Kirtimas kirtimas, Item itemToSell) {
-		super(player);
+	public KirtimasActivity(Bot bot, Kirtimas kirtimas, Item itemToSell) {
+		super(bot);
 		this.kirtimas = kirtimas;
 		this.itemToSell = itemToSell;
 
-		shop = new Shop(player);
+		shop = new Shop(bot);
 	}
 
 	@Override
@@ -24,11 +24,11 @@ public class KirtimasActivity extends ActivityBase {
 
 			switch (kirtimas.perform()) {
 				case Kirtimas.RESULT_NO_AXE:
-					player.sendMessage("I don't have required axe... :(");
+					bot.sendMessage("I don't have required axe... :(");
 					stopFlag = true;
 					break;
 				case Kirtimas.RESULT_LEVEL_TOO_LOW:
-					player.sendMessage("My woodcutting level is too low... :(");
+					bot.sendMessage("My woodcutting level is too low... :(");
 					stopFlag = true;
 					break;
 				case Kirtimas.RESULT_INVENTORY_FULL:

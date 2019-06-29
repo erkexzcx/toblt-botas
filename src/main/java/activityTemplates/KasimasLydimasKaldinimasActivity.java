@@ -12,14 +12,14 @@ public class KasimasLydimasKaldinimasActivity extends ActivityBase {
 	private final Item itemToSell;
 	private final Shop shop;
 
-	public KasimasLydimasKaldinimasActivity(Player player, Kasimas kasimas, Lydimas lydimas, Kaldinimas kaldinimas, Item itemToSell) {
-		super(player);
+	public KasimasLydimasKaldinimasActivity(Bot bot, Kasimas kasimas, Lydimas lydimas, Kaldinimas kaldinimas, Item itemToSell) {
+		super(bot);
 		this.kasimas = kasimas;
 		this.lydimas = lydimas;
 		this.kaldinimas = kaldinimas;
 		this.itemToSell = itemToSell;
 
-		shop = new Shop(player);
+		shop = new Shop(bot);
 	}
 
 	@Override
@@ -28,11 +28,11 @@ public class KasimasLydimasKaldinimasActivity extends ActivityBase {
 
 			switch (kasimas.perform()) {
 				case Kasimas.RESULT_NO_PICKAXE:
-					player.sendMessage("Don't have required pickaxe... :(");
+					bot.sendMessage("Don't have required pickaxe... :(");
 					stopFlag = true;
 					break;
 				case Kasimas.RESULT_LEVEL_TOO_LOW:
-					player.sendMessage("Mining level is too low... :(");
+					bot.sendMessage("Mining level is too low... :(");
 					stopFlag = true;
 					break;
 				case Kasimas.RESULT_INVENTORY_FULL:
@@ -48,7 +48,7 @@ public class KasimasLydimasKaldinimasActivity extends ActivityBase {
 
 			switch (lydimas.perform()) {
 				case Lydimas.RESULT_LEVEL_TOO_LOW:
-					player.sendMessage("Kalvininkavimas level is too low... :(");
+					bot.sendMessage("Kalvininkavimas level is too low... :(");
 					stopFlag = true;
 					break;
 				case Lydimas.RESULT_NOT_ENOUGH_RESOURCES:
@@ -64,7 +64,7 @@ public class KasimasLydimasKaldinimasActivity extends ActivityBase {
 
 			switch (kaldinimas.perform()) {
 				case Kaldinimas.RESULT_LEVEL_TOO_LOW:
-					player.sendMessage("Kalvininkavimas level is too low... :(");
+					bot.sendMessage("Kalvininkavimas level is too low... :(");
 					stopFlag = true;
 					break;
 				case Kaldinimas.RESULT_NOT_ENOUGH_RESOURCES:
