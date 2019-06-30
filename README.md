@@ -124,7 +124,7 @@ Slayer slayer = new Slayer(b1, Slayer.KILL_1_10);
 Kovojimas kovojimas = new Kovojimas(b1, Kovojimas.PRIESAS_ZIURKE); // Kolkas tik ziurke
 new SlayerKovojimasActivity(b1, slayer, kovojimas).startThread();
 ```
-Grybavimas
+Grybavimas:
 ```
 Item item = db.getItemById("GR4");
 Grybavimas grybavimas = new Grybavimas(b1, item);
