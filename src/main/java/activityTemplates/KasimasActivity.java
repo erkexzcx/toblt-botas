@@ -1,6 +1,5 @@
 package activityTemplates;
 
-import misc.Shop;
 import actions.*;
 import core.*;
 
@@ -8,14 +7,11 @@ public class KasimasActivity extends ActivityBase {
 
 	private final Kasimas kasimas;
 	private final Item itemToSell;
-	private final Shop shop;
 
 	public KasimasActivity(Bot bot, Kasimas kasimas, Item itemToSell) {
 		super(bot);
 		this.kasimas = kasimas;
 		this.itemToSell = itemToSell;
-
-		shop = new Shop(bot);
 	}
 
 	@Override
@@ -33,7 +29,7 @@ public class KasimasActivity extends ActivityBase {
 					break;
 				case Kasimas.RESULT_INVENTORY_FULL:
 					bot.shop().sellEverythingByCategory("neapdirbtas brangakmenis");
-					shop.sell(itemToSell);
+					bot.shop().sell(itemToSell);
 					break;
 			}
 

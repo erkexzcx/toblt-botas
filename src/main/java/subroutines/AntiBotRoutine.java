@@ -137,7 +137,7 @@ public class AntiBotRoutine extends Routine {
 	 */
 	private String getColorText(String captchaImageUrl) throws IOException, TesseractException, InterruptedException, IM4JavaException {
 		// How many times do we re-download re-generated image with requierd color's text?
-		int MAX_CAPTCHATEXT_DOWNLOADS = 15;
+		int MAX_CAPTCHATEXT_DOWNLOADS = 20;
 
 		for (int i = 0; i < MAX_CAPTCHATEXT_DOWNLOADS; i++) {
 

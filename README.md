@@ -124,6 +124,12 @@ Slayer slayer = new Slayer(b1, Slayer.KILL_1_10);
 Kovojimas kovojimas = new Kovojimas(b1, Kovojimas.PRIESAS_ZIURKE); // Kolkas tik ziurke
 new SlayerKovojimasActivity(b1, slayer, kovojimas).startThread();
 ```
+Grybavimas
+```
+Item item = db.getItemById("GR4");
+Grybavimas grybavimas = new Grybavimas(b1, item);
+new GrybavimasActivity(b1, grybavimas, item).startThread();
+```
 Šiukšlyno daigtų surinkinėjimas ir pardavinėjimas, pasiliekant kai kuriuos daiktus:
 ```
 Item[] doNotSellThese = new Item[]{

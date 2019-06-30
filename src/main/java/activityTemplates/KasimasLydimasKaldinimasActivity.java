@@ -1,6 +1,5 @@
 package activityTemplates;
 
-import misc.Shop;
 import actions.*;
 import core.*;
 
@@ -10,7 +9,6 @@ public class KasimasLydimasKaldinimasActivity extends ActivityBase {
 	private final Lydimas lydimas;
 	private final Kaldinimas kaldinimas;
 	private final Item itemToSell;
-	private final Shop shop;
 	
 	public KasimasLydimasKaldinimasActivity(Bot bot, Kasimas kasimas, Lydimas lydimas, Kaldinimas kaldinimas, Item itemToSell) {
 		super(bot);
@@ -18,8 +16,6 @@ public class KasimasLydimasKaldinimasActivity extends ActivityBase {
 		this.lydimas = lydimas;
 		this.kaldinimas = kaldinimas;
 		this.itemToSell = itemToSell;
-		
-		shop = new Shop(bot);
 	}
 	
 	@Override
@@ -69,7 +65,7 @@ public class KasimasLydimasKaldinimasActivity extends ActivityBase {
 					stopFlag = true;
 					break;
 				case Kaldinimas.RESULT_NOT_ENOUGH_RESOURCES:
-					shop.sell(itemToSell);
+					bot.shop().sell(itemToSell);
 					return;
 			}
 			

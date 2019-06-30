@@ -1,6 +1,5 @@
 package activityTemplates;
 
-import misc.Shop;
 import actions.*;
 import core.*;
 
@@ -8,14 +7,11 @@ public class KirtimasActivity extends ActivityBase {
 
 	private final Kirtimas kirtimas;
 	private final Item itemToSell;
-	private final Shop shop;
 
 	public KirtimasActivity(Bot bot, Kirtimas kirtimas, Item itemToSell) {
 		super(bot);
 		this.kirtimas = kirtimas;
 		this.itemToSell = itemToSell;
-
-		shop = new Shop(bot);
 	}
 
 	@Override
@@ -32,7 +28,7 @@ public class KirtimasActivity extends ActivityBase {
 					stopFlag = true;
 					break;
 				case Kirtimas.RESULT_INVENTORY_FULL:
-					shop.sell(itemToSell);
+					bot.shop().sell(itemToSell);
 					break;
 			}
 

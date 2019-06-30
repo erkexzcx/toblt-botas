@@ -1,6 +1,5 @@
 package activityTemplates;
 
-import misc.Shop;
 import core.*;
 import java.io.File;
 import java.util.regex.Matcher;
@@ -11,7 +10,6 @@ public class BomzavimasActivity extends ActivityBase {
 
 	private final String baseUrl;
 	private final Item[] doNotSellList;
-	private final Shop shop;
 
 	private static final Pattern EXTRACT_DETAILS_PATTERN = Pattern.compile("Yra šiukšlyne:\\s+<b>(\\d+)</b>\\s+<br> Laisvos vietos inventoriuje:\\s+<b>(\\d+)</b>", Pattern.MULTILINE);
 	private static final String TRASH_BASE_URL = "http://tob.lt/zaisti.php?{CREDENTIALS}&id=siuksl";
@@ -20,8 +18,6 @@ public class BomzavimasActivity extends ActivityBase {
 		super(bot);
 		this.doNotSellList = doNotSellList;
 		baseUrl = bot.insertCredentials(TRASH_BASE_URL);
-
-		shop = new Shop(bot);
 	}
 
 	@Override
@@ -53,7 +49,7 @@ public class BomzavimasActivity extends ActivityBase {
 			// Perform some calculations:
 			int amountToTake = (maxToPick > spaceInInventory ? spaceInInventory : maxToPick);
 			if (spaceInInventory == 0) {
-				shop.sellEverything(doNotSellList);
+				bot.shop().sellEverything(doNotSellList);
 				continue;
 			}
 
@@ -73,8 +69,6 @@ public class BomzavimasActivity extends ActivityBase {
 			);
 
 		}
-
-		bot.sendMessage("Stopped! 👎");
 	}
 
 }
