@@ -1,5 +1,6 @@
 package core;
 
+import activityTemplates.Activity;
 import misc.*;
 
 public class Bot {
@@ -11,6 +12,7 @@ public class Bot {
 	private final Player player;
 	private static TelegramBot telegramBot;
 	private static Database database;
+	private Activity activity = null;
 
 	// Each bot also contains its own Navigator.
 	private final Navigator navigator;
@@ -49,6 +51,25 @@ public class Bot {
 	@Override
 	public String toString() {
 		return nick;
+	}
+	
+	public Bot setActivity(Activity activity){
+		this.activity = activity;
+		return this;
+	}
+	
+	public Bot startActivity(){
+		activity.startThread();
+		return this;
+	}
+	
+	public void stopActivity(String reason){
+		sendMessage("Bot is stopping: " + reason);
+		stopActivity();
+	}
+	
+	public void stopActivity(){
+		activity.stopThread();
 	}
 
 }

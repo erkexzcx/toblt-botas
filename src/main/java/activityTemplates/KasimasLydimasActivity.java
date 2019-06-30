@@ -1,6 +1,7 @@
 package activityTemplates;
 
 import actions.*;
+import actions.exceptions.*;
 import core.*;
 
 public class KasimasLydimasActivity extends ActivityBase {
@@ -20,19 +21,19 @@ public class KasimasLydimasActivity extends ActivityBase {
 	protected void startActivity() {
 		while (!stopFlag) {
 
-			switch (kasimas.perform()) {
-				case Kasimas.RESULT_NO_PICKAXE:
-					bot.sendMessage("Don't have required pickaxe... :(");
-					stopFlag = true;
-					break;
-				case Kasimas.RESULT_LEVEL_TOO_LOW:
-					bot.sendMessage("Mining level is too low... :(");
-					stopFlag = true;
-					break;
-				case Kasimas.RESULT_INVENTORY_FULL:
-					bot.shop().sellEverythingByCategory("neapdirbtas brangakmenis");
-					meltItems();
-					break;
+			try {
+				kasimas.perform();
+			} catch (InventoryFullException ex) {
+				bot.shop().sellEverythingByCategory("neapdirbtas brangakmenis");
+				meltItems();
+			} catch (LevelTooLowException ex) {
+				bot.stopActivity(this.getClass().getName() + " level is too low!");
+			} catch (OtherLevelsTooLowException ex) {
+				// TODO
+			} catch (ResultFailException ex) {
+				bot.stopActivity("Unable to confirm successful action: " + kasimas.getClass().getName());
+			} catch (MissingToolException ex) {
+				bot.stopActivity(this.getClass().getName() + " does not have required tool to perform this action!");
 			}
 
 		}
@@ -41,14 +42,17 @@ public class KasimasLydimasActivity extends ActivityBase {
 	private void meltItems() {
 		while (!stopFlag) {
 
-			switch (lydimas.perform()) {
-				case Lydimas.RESULT_LEVEL_TOO_LOW:
-					bot.sendMessage("Kalvininkavimas level is too low... :(");
-					stopFlag = true;
-					break;
-				case Lydimas.RESULT_NOT_ENOUGH_RESOURCES:
-					bot.shop().sell(itemToSell);
-					return;
+			try {
+				lydimas.perform();
+			} catch (LevelTooLowException ex) {
+				bot.stopActivity(this.getClass().getName() + " level is too low!");
+			} catch (OtherLevelsTooLowException ex) {
+				// TODO
+			} catch (ResultFailException ex) {
+				bot.stopActivity("Unable to confirm successful action: " + lydimas.getClass().getName());
+			}catch (NotEnoughMaterialsException ex) {
+				bot.shop().sell(itemToSell);
+				break;
 			}
 
 		}

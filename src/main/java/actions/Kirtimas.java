@@ -1,43 +1,42 @@
 package actions;
 
+import actions.basicActions.PickingToolAction;
 import core.*;
 
-public class Kirtimas extends ActionBase {
+public class Kirtimas extends PickingToolAction {
 
-	public static final int RESULT_SUCCESS = 0;
-	public static final int RESULT_NO_AXE = 1;
-	public static final int RESULT_INVENTORY_FULL = 2;
-	public static final int RESULT_LEVEL_TOO_LOW = 3;
-
-	private static final String KIRSTI_BASE_URL = "http://tob.lt/miskas.php?{CREDENTIALS}&id=kertu&ka=";
-
-	public Kirtimas(Bot bot, Item medis) {
-		super(
-				bot,
-				bot.insertCredentials(KIRSTI_BASE_URL + medis.getId())
-		);
+	public Kirtimas(Bot bot, Item item) {
+		super(bot, item);
 	}
 
-	public int perform() {
+	@Override
+	public boolean isInventoryFull() {
+		return doc.html().contains("Jūsų inventorius jau pilnas!");
+	}
 
-		doc = bot.navigator().navigate(baseUrl, Navigator.NAVIGATION_TYPE_REGULAR);
+	@Override
+	public boolean isMissingTool() {
+		return doc.html().contains("Neturite reikiamo kirvio.");
+	}
 
-		String nextUrl = getActionUrl();
-		doc = bot.navigator().navigate(nextUrl, Navigator.NAVIGATION_TYPE_ACTION);
+	@Override
+	public boolean isSuccessful() {
+		return doc.html().contains("Nukirsta:");
+	}
 
-		if (doc.html().contains("Neturite reikiamo kirvio.")) {
-			return RESULT_NO_AXE;
-		}
-		if (doc.html().contains("Jūsų medkirčio lygis per žemas.")) {
-			return RESULT_LEVEL_TOO_LOW;
-		}
-		if (doc.html().contains("Jūsų inventorius jau pilnas!")) {
-			return RESULT_INVENTORY_FULL;
-		}
+	@Override
+	public boolean isLevelTooLow() {
+		return doc.html().contains("Jūsų medkirčio lygis per žemas.");
+	}
 
-		// Not a foolproof, but just return SUCCESS for now:
-		return RESULT_SUCCESS;
+	@Override
+	public boolean isOtherLevelsTooLow() {
+		return false;
+	}
 
+	@Override
+	public String getBaseUrl() {
+		return "http://tob.lt/miskas.php?{CREDENTIALS}&id=kertu&ka=";
 	}
 
 }

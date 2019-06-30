@@ -40,8 +40,7 @@ public class Inventory {
 			Element el = container.selectFirst("a[href*=\"&id=drop&\"]");
 			Matcher m = EXTRACT_ITEMID_PATTERN.matcher(el.attr("abs:href"));
 			if (!m.find()) {
-				bot.sendMessage("Regex doesn't work... fix your code!");
-				System.exit(1);
+				bot.stopActivity("Regex in class " + this.getClass().getName() + " doesn't work. Fix it!");
 			}
 			String id = m.group(1);
 			
@@ -51,8 +50,7 @@ public class Inventory {
 			// Also insert item's count to the object:
 			m = EXTRACT_ITEM_COUNT_PATTERN.matcher(container.html());
 			if (!m.find()) {
-				bot.sendMessage("Regex doesn't work... fix your code!");
-				System.exit(1);
+				bot.stopActivity("Regex in class " + this.getClass().getName() + " doesn't work. Fix it!");
 			}
 			String countText = m.group(1);
 			int count = Integer.parseInt(countText);

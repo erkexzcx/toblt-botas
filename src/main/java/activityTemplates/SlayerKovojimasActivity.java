@@ -2,6 +2,7 @@ package activityTemplates;
 
 import actions.Kovojimas;
 import actions.Slayer;
+import actions.exceptions.*;
 import core.Bot;
 
 public class SlayerKovojimasActivity extends ActivityBase {
@@ -20,16 +21,36 @@ public class SlayerKovojimasActivity extends ActivityBase {
 
 		int remaining = slayer.enemiesLeft();
 		if (remaining == 0) {
-			slayer.startQuest();
+			try {
+				slayer.startQuest();
+			} catch (SlayerAlreadyInProgressException ex) {
+				bot.stopActivity("Slayer quest is already in progress, but we attempted to start it. Fix code!");
+			} catch (LevelTooLowException ex) {
+				bot.stopActivity(slayer.getClass().getName() + " level is too low!");
+			} catch (ResultFailException ex) {
+				bot.stopActivity("Unable to confirm successful action: " + slayer.getClass().getName());
+			}
 			remaining = slayer.enemiesLeft();
 		}
 
 		while (!stopFlag) {
-			kovojimas.perform();
-			
+
+			try {
+				kovojimas.perform();
+			} catch (ResultFailException ex) {
+				bot.stopActivity("Unable to confirm successful action: " + kovojimas.getClass().getName());
+			}
+
 			if (--remaining == 0) {
-				slayer.startQuest(); // "Uzduotis atlikta!"
-				slayer.startQuest(); // "Uzduotis priskirta!"
+				try {
+					slayer.startQuest();
+				} catch (SlayerAlreadyInProgressException ex) {
+					bot.stopActivity("Slayer quest is already in progress, but we attempted to start it. Fix code!");
+				} catch (LevelTooLowException ex) {
+					bot.stopActivity(slayer.getClass().getName() + " level is too low!");
+				} catch (ResultFailException ex) {
+					bot.stopActivity("Unable to confirm successful action: " + slayer.getClass().getName());
+				}
 				remaining = slayer.enemiesLeft();
 			}
 		}

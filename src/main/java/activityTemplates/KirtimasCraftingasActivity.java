@@ -1,6 +1,7 @@
 package activityTemplates;
 
 import actions.*;
+import actions.exceptions.*;
 import core.*;
 
 public class KirtimasCraftingasActivity extends ActivityBase {
@@ -20,18 +21,18 @@ public class KirtimasCraftingasActivity extends ActivityBase {
 	protected void startActivity() {
 		while (!stopFlag) {
 
-			switch (kirtimas.perform()) {
-				case Kirtimas.RESULT_NO_AXE:
-					bot.sendMessage("I don't have required axe... :(");
-					stopFlag = true;
-					break;
-				case Kirtimas.RESULT_LEVEL_TOO_LOW:
-					bot.sendMessage("My woodcutting level is too low... :(");
-					stopFlag = true;
-					break;
-				case Kirtimas.RESULT_INVENTORY_FULL:
-					craftItems();
-					break;
+			try {
+				kirtimas.perform();
+			} catch (InventoryFullException ex) {
+				craftItems();
+			} catch (LevelTooLowException ex) {
+				bot.stopActivity(this.getClass().getName() + " level is too low!");
+			} catch (OtherLevelsTooLowException ex) {
+				// TODO
+			} catch (ResultFailException ex) {
+				bot.stopActivity("Unable to confirm successful action: " + kirtimas.getClass().getName());
+			} catch (MissingToolException ex) {
+				bot.stopActivity(this.getClass().getName() + " does not have required tool to perform this action!");
 			}
 
 		}
@@ -40,14 +41,17 @@ public class KirtimasCraftingasActivity extends ActivityBase {
 	private void craftItems() {
 		while (!stopFlag) {
 
-			switch (crafting.perform()) {
-				case Crafting.RESULT_LEVEL_TOO_LOW:
-					bot.sendMessage("My crafting level is too low... :(");
-					stopFlag = true;
-					break;
-				case Crafting.RESULT_NOT_ENOUGH_RESOURCES:
-					bot.shop().sell(itemToSell);
-					return;
+			try {
+				crafting.perform();
+			} catch (LevelTooLowException ex) {
+				bot.stopActivity(this.getClass().getName() + " level is too low!");
+			} catch (OtherLevelsTooLowException ex) {
+				// TODO
+			} catch (ResultFailException ex) {
+				bot.stopActivity("Unable to confirm successful action: " + crafting.getClass().getName());
+			}catch (NotEnoughMaterialsException ex) {
+				bot.shop().sell(itemToSell);
+				break;
 			}
 
 		}

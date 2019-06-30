@@ -88,14 +88,12 @@ public class Navigator {
 		updateTimestamps();
 
 		if (checkAccountUnavailable()) {
-			bot.sendMessage("Account is not playable!");
-			System.exit(1); // TODO
+			bot.stopActivity("Account is not playable!");
 		} else if (checkTooFast()) {
 			sleepSeconds(30);
 			return navigate(url, navigationType);
 		} else if (checkOtherLevelsTooLow()) {
-			bot.sendMessage("Bot's other levels are too low to do current action!");
-			System.exit(1); // TODO
+			bot.stopActivity("Bot's other levels are too low to do current action!");
 		} else if (checkAntiBot()) {
 			new AntiBotRoutine(doc, bot).perform();
 			return navigate(url, navigationType);
@@ -159,14 +157,12 @@ public class Navigator {
 		updateTimestamps();
 
 		if (checkAccountUnavailable()) {
-			bot.sendMessage("Account is not playable!");
-			System.exit(1); // TODO
+			bot.stopActivity("Account is not playable!");
 		} else if (checkTooFast()) {
 			sleepSeconds(30);
 			return navigateForPm(url);
 		} else if (checkOtherLevelsTooLow()) {
-			bot.sendMessage("Bot's other levels are too low to do current action!");
-			System.exit(1); // TODO
+			bot.stopActivity("Bot's other levels are too low to do current action!");
 		} else if (checkAntiBot()) {
 			new AntiBotRoutine(doc, bot).perform();
 			return navigateForPm(url);

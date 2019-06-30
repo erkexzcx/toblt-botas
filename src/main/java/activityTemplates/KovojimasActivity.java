@@ -1,6 +1,7 @@
 package activityTemplates;
 
 import actions.Kovojimas;
+import actions.exceptions.ResultFailException;
 import core.Bot;
 
 public class KovojimasActivity extends ActivityBase {
@@ -14,11 +15,15 @@ public class KovojimasActivity extends ActivityBase {
 
 	@Override
 	protected void startActivity() {
-
 		while (!stopFlag) {
-			kovojimas.perform();
+			
+			try {
+				kovojimas.perform();
+			} catch (ResultFailException ex) {
+				bot.stopActivity("Unable to confirm successful action: " + kovojimas.getClass().getName());
+			}
+			
 		}
-
 	}
 
 }

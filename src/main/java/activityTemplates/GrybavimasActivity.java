@@ -1,6 +1,7 @@
 package activityTemplates;
 
 import actions.*;
+import actions.exceptions.*;
 import core.*;
 
 public class GrybavimasActivity extends ActivityBase {
@@ -18,14 +19,16 @@ public class GrybavimasActivity extends ActivityBase {
 	protected void startActivity() {
 		while (!stopFlag) {
 
-			switch (grybavimas.perform()) {
-				case Grybavimas.RESULT_LEVEL_TOO_LOW:
-					bot.sendMessage("My woodcutting level is too low... :(");
-					stopFlag = true;
-					break;
-				case Grybavimas.RESULT_INVENTORY_FULL:
-					bot.shop().sell(itemToSell);
-					break;
+			try {
+				grybavimas.perform();
+			} catch (InventoryFullException ex) {
+				bot.shop().sell(itemToSell);
+			} catch (LevelTooLowException ex) {
+				bot.stopActivity(this.getClass().getName() + " level is too low!");
+			} catch (OtherLevelsTooLowException ex) {
+				// TODO
+			} catch (ResultFailException ex) {
+				bot.stopActivity("Unable to confirm successful action: " + this.getClass().getName());
 			}
 
 		}

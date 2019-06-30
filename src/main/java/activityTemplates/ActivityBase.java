@@ -11,7 +11,7 @@ public abstract class ActivityBase extends Thread implements Activity {
 	protected final Bot bot;
 	protected Document doc;
 
-	protected boolean stopFlag = false;
+	protected volatile boolean stopFlag = false;
 
 	public ActivityBase(Bot bot) {
 		this.bot = bot;

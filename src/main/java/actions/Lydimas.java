@@ -1,40 +1,37 @@
 package actions;
 
+import actions.basicActions.UsingMaterialsAction;
 import core.*;
 
-public class Lydimas extends ActionBase {
+public class Lydimas extends UsingMaterialsAction {
 
-	public static final int RESULT_SUCCESS = 0;
-	public static final int RESULT_NOT_ENOUGH_RESOURCES = 1;
-	public static final int RESULT_LEVEL_TOO_LOW = 2;
-
-	public static final String LYDITI_BASE_URL = "http://tob.lt/kasimas_kalve.php?{CREDENTIALS}&id=lydau0&ka=";
-
-	public Lydimas(Bot bot, Item ruda) {
-		super(
-				bot,
-				bot.insertCredentials(LYDITI_BASE_URL + ruda.getId())
-		);
+	public Lydimas(Bot bot, Item item) {
+		super(bot, item);
 	}
 
-	public int perform() {
+	@Override
+	public boolean isNotEnoughMaterials() {
+		return doc.html().contains("Nepakanka žaliavų!");
+	}
 
-		doc = bot.navigator().navigate(baseUrl, Navigator.NAVIGATION_TYPE_REGULAR);
+	@Override
+	public boolean isSuccessful() {
+		return doc.html().contains("Išlieta:");
+	}
 
-		if (doc.html().contains("Nepakanka žaliavų!")) {
-			return RESULT_NOT_ENOUGH_RESOURCES;
-		}
+	@Override
+	public boolean isLevelTooLow() {
+		return doc.html().contains("Kalvininkavimo lygis per žemas!");
+	}
 
-		String nextUrl = getActionUrl();
-		doc = bot.navigator().navigate(nextUrl, Navigator.NAVIGATION_TYPE_ACTION);
+	@Override
+	public boolean isOtherLevelsTooLow() {
+		return false;
+	}
 
-		if (doc.html().contains("Kalvininkavimo lygis per žemas!")) {
-			return RESULT_LEVEL_TOO_LOW;
-		}
-
-		// Not a foolproof, but just return SUCCESS for now:
-		return RESULT_SUCCESS;
-
+	@Override
+	public String getBaseUrl() {
+		return "http://tob.lt/kasimas_kalve.php?{CREDENTIALS}&id=lydau0&ka=";
 	}
 
 }

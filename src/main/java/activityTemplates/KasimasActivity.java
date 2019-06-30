@@ -1,6 +1,11 @@
 package activityTemplates;
 
 import actions.*;
+import actions.exceptions.InventoryFullException;
+import actions.exceptions.LevelTooLowException;
+import actions.exceptions.MissingToolException;
+import actions.exceptions.OtherLevelsTooLowException;
+import actions.exceptions.ResultFailException;
 import core.*;
 
 public class KasimasActivity extends ActivityBase {
@@ -17,20 +22,20 @@ public class KasimasActivity extends ActivityBase {
 	@Override
 	protected void startActivity() {
 		while (!stopFlag) {
-
-			switch (kasimas.perform()) {
-				case Kasimas.RESULT_NO_PICKAXE:
-					bot.sendMessage("Don't have required pickaxe... :(");
-					stopFlag = true;
-					break;
-				case Kasimas.RESULT_LEVEL_TOO_LOW:
-					bot.sendMessage("Mining level is too low... :(");
-					stopFlag = true;
-					break;
-				case Kasimas.RESULT_INVENTORY_FULL:
-					bot.shop().sellEverythingByCategory("neapdirbtas brangakmenis");
-					bot.shop().sell(itemToSell);
-					break;
+			
+			try {
+				kasimas.perform();
+			} catch (InventoryFullException ex) {
+				bot.shop().sellEverythingByCategory("neapdirbtas brangakmenis");
+				bot.shop().sell(itemToSell);
+			} catch (LevelTooLowException ex) {
+				bot.stopActivity(this.getClass().getName() + " level is too low!");
+			} catch (OtherLevelsTooLowException ex) {
+				// TODO
+			} catch (ResultFailException ex) {
+				bot.stopActivity("Unable to confirm successful action: " + this.getClass().getName());
+			} catch (MissingToolException ex) {
+				bot.stopActivity(this.getClass().getName() + " does not have required tool to perform this action!");
 			}
 
 		}

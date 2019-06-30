@@ -1,14 +1,12 @@
 package actions;
 
+import actions.exceptions.*;
 import core.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.jsoup.nodes.Document;
 
-public class Slayer extends ActionBase {
-
-	public static final int RESULT_SUCCESS = 0;
-	public static final int RESULT_LEVEL_TOO_LOW = 1;
-	public static final int RESULT_ALREADY_STARTED = 2;
+public class Slayer {
 
 	public static final String KILL_1_10 = "http://tob.lt/slayer.php?{CREDENTIALS}&id=task&nr=1";
 	public static final String KILL_11_30 = "http://tob.lt/slayer.php?{CREDENTIALS}&id=task&nr=2";
@@ -20,37 +18,42 @@ public class Slayer extends ActionBase {
 	public static final String KILL_261_350 = "http://tob.lt/slayer.php?{CREDENTIALS}&id=task&nr=8";
 
 	private static final Pattern EXTRACT_REMAINING_COUNT_PATTERN = Pattern.compile("Dar turite nužudyti:\\s+<b>(\\d+)</b>", Pattern.MULTILINE);
+	
+	private static final String BASE_URL = "http://tob.lt/slayer.php?{CREDENTIALS}&id=";
 
-	private final String what;
+	private final String questUrl;
+	private final Bot bot;
+	private Document doc;
 
 	public Slayer(Bot bot, String what) {
-		super(
-				bot,
-				bot.insertCredentials("http://tob.lt/slayer.php?{CREDENTIALS}&id=")
-		);
-		this.what = bot.insertCredentials(what);
+		this.bot = bot;
+		questUrl = bot.insertCredentials(BASE_URL) + what;
+		
 	}
 
-	public int startQuest() {
+	public void startQuest() throws SlayerAlreadyInProgressException, LevelTooLowException, ResultFailException {
+		
+		// Load twice to prevent random messages for the user in the game:
+		bot.navigator().navigate(questUrl, Navigator.NAVIGATION_TYPE_REGULAR);
+		doc = bot.navigator().navigate(questUrl, Navigator.NAVIGATION_TYPE_REGULAR);
 
-		doc = bot.navigator().navigate(what, Navigator.NAVIGATION_TYPE_REGULAR);
-
-		String html = doc.html();
-		if (html.contains("Jums jau išrasyta užduotis, prašome ją įvykdyti arba atšaukti.")) {
-			bot.sendMessage("Slayer has already been started! Fix it first.");
-			System.exit(1);
+		if (doc.html().contains("Jums sėkmingai paskirta užduotis!")) {
+			return;
 		}
-		if (html.contains("Jūsų slayer lygis per žemas!")) {
-			return RESULT_LEVEL_TOO_LOW;
+		
+		if (doc.html().contains("Jums jau išrasyta užduotis, prašome ją įvykdyti arba atšaukti.")) {
+			throw new SlayerAlreadyInProgressException();
 		}
-
-		return RESULT_SUCCESS;
+		if (doc.html().contains("Jūsų slayer lygis per žemas!")) {
+			throw new LevelTooLowException();
+		}
+		throw new ResultFailException();
 
 	}
 
 	private boolean isInProgress() {
-		doc = bot.navigator().navigate(baseUrl, Navigator.NAVIGATION_TYPE_REGULAR);
-		return doc.html().contains("Jūs turite užduotį!");
+		doc = bot.navigator().navigate(questUrl, Navigator.NAVIGATION_TYPE_REGULAR);
+		return doc.html().contains("Jums jau išrasyta užduotis");
 	}
 
 	public int enemiesLeft() {
@@ -62,8 +65,7 @@ public class Slayer extends ActionBase {
 
 		Matcher m = EXTRACT_REMAINING_COUNT_PATTERN.matcher(doc.html());
 		if (!m.find()) {
-			bot.sendMessage("Regex doesn't work... fix your code!");
-			System.exit(1);
+			bot.stopActivity("Regex in class " + this.getClass().getName() + " doesn't work. Fix it!");
 		}
 		String count = m.group(1);
 		return Integer.parseInt(count);

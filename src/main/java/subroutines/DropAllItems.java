@@ -32,8 +32,7 @@ public class DropAllItems extends Routine {
 			// Get droppable amount:
 			Matcher m = EXTRACT_AMOUNT_PATTERN.matcher(e.html());
 			if (!m.find()) {
-				bot.sendMessage("Regex doesn't work in kovojimas activity... fix your code!");
-				System.exit(1);
+				bot.stopActivity("Regex in class " + this.getClass().getName() + " doesn't work. Fix it!");
 			}
 			int droppableAmount = Integer.parseInt(m.group(1));
 

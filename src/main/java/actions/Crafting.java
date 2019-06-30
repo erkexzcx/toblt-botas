@@ -1,40 +1,37 @@
 package actions;
 
+import actions.basicActions.UsingMaterialsAction;
 import core.*;
 
-public class Crafting extends ActionBase {
+public class Crafting extends UsingMaterialsAction {
 
-	public static final int RESULT_SUCCESS = 0;
-	public static final int RESULT_NOT_ENOUGH_RESOURCES = 1;
-	public static final int RESULT_LEVEL_TOO_LOW = 2;
-
-	private static final String LANKAS_BASE_URL = "http://tob.lt/dirbtuves.php?{CREDENTIALS}&id=gaminu0&ka=";
-
-	public Crafting(Bot bot, Item lankas) {
-		super(
-				bot,
-				bot.insertCredentials(LANKAS_BASE_URL + lankas.getId())
-		);
+	public Crafting(Bot bot, Item item) {
+		super(bot, item);
 	}
 
-	public int perform() {
+	@Override
+	public boolean isNotEnoughMaterials() {
+		return doc.html().contains("Neužtenka žaliavų!");
+	}
 
-		doc = bot.navigator().navigate(baseUrl, Navigator.NAVIGATION_TYPE_REGULAR);
+	@Override
+	public boolean isSuccessful() {
+		return doc.html().contains("Pagaminta:");
+	}
 
-		if (doc.html().contains("Neužtenka žaliavų!")) {
-			return RESULT_NOT_ENOUGH_RESOURCES;
-		}
+	@Override
+	public boolean isLevelTooLow() {
+		return doc.html().contains("Jūsų crafting lygis per žemas.");
+	}
 
-		String nextUrl = getActionUrl();
-		doc = bot.navigator().navigate(nextUrl, Navigator.NAVIGATION_TYPE_ACTION);
+	@Override
+	public boolean isOtherLevelsTooLow() {
+		return false;
+	}
 
-		if (doc.html().contains("Jūsų crafting lygis per žemas.")) {
-			return RESULT_LEVEL_TOO_LOW;
-		}
-
-		// Not a foolproof, but just return SUCCESS for now:
-		return RESULT_SUCCESS;
-
+	@Override
+	public String getBaseUrl() {
+		return "http://tob.lt/dirbtuves.php?{CREDENTIALS}&id=gaminu0&ka=";
 	}
 
 }

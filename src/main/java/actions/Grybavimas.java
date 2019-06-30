@@ -1,39 +1,37 @@
 package actions;
 
+import actions.basicActions.PickingNoToolAction;
 import core.*;
 
-public class Grybavimas extends ActionBase {
+public class Grybavimas extends PickingNoToolAction {
 
-	public static final int RESULT_SUCCESS = 0;
-	public static final int RESULT_INVENTORY_FULL = 1;
-	public static final int RESULT_LEVEL_TOO_LOW = 2;
-
-	private static final String GRYBAUTI_BASE_URL = "http://tob.lt/miskas.php?{CREDENTIALS}&id=renkugrybus0&ka=";;
-
-	public Grybavimas(Bot bot, Item grybas) {
-		super(
-				bot,
-				bot.insertCredentials(GRYBAUTI_BASE_URL + grybas.getId())
-		);
+	public Grybavimas(Bot bot, Item item) {
+		super(bot, item);
 	}
 
-	public int perform() {
+	@Override
+	public boolean isInventoryFull() {
+		return doc.html().contains("Jūsų inventorius jau pilnas!");
+	}
 
-		doc = bot.navigator().navigate(baseUrl, Navigator.NAVIGATION_TYPE_REGULAR);
+	@Override
+	public boolean isLevelTooLow() {
+		return doc.html().contains("Jūsų grybavimo lygis per žemas.");
+	}
 
-		String nextUrl = getActionUrl();
-		doc = bot.navigator().navigate(nextUrl, Navigator.NAVIGATION_TYPE_ACTION);
+	@Override
+	public boolean isSuccessful() {
+		return doc.html().contains("Grybas paimtas:");
+	}
 
-		if (doc.html().contains("Jūsų grybavimo lygis per žemas.")) {
-			return RESULT_LEVEL_TOO_LOW;
-		}
-		if (doc.html().contains("Jūsų inventorius jau pilnas!")) {
-			return RESULT_INVENTORY_FULL;
-		}
+	@Override
+	public boolean isOtherLevelsTooLow() {
+		return false; // TODO
+	}
 
-		// Not a foolproof, but just return SUCCESS for now:
-		return RESULT_SUCCESS;
-
+	@Override
+	public String getBaseUrl() {
+		return "http://tob.lt/miskas.php?{CREDENTIALS}&id=renkugrybus0&ka=";
 	}
 
 }
