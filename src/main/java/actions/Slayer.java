@@ -21,13 +21,15 @@ public class Slayer {
 	
 	private static final String BASE_URL = "http://tob.lt/slayer.php?{CREDENTIALS}&id=";
 
+	private final String baseUrl;
 	private final String questUrl;
 	private final Bot bot;
 	private Document doc;
 
 	public Slayer(Bot bot, String what) {
 		this.bot = bot;
-		questUrl = bot.insertCredentials(BASE_URL) + what;
+		this.baseUrl = bot.insertCredentials(BASE_URL);
+		questUrl = baseUrl + what;
 		
 	}
 
@@ -52,8 +54,8 @@ public class Slayer {
 	}
 
 	private boolean isInProgress() {
-		doc = bot.navigator().navigate(questUrl, Navigator.NAVIGATION_TYPE_REGULAR);
-		return doc.html().contains("Jums jau išrasyta užduotis");
+		doc = bot.navigator().navigate(baseUrl, Navigator.NAVIGATION_TYPE_REGULAR);
+		return doc.html().contains("Jūs turite užduotį!");
 	}
 
 	public int enemiesLeft() {

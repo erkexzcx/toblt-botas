@@ -12,9 +12,16 @@ public class NewPMRoutine extends Routine {
 
 	private static final Pattern MESSAGE_EXTRACT_PATTERN = Pattern.compile("</b>: (.+)<br>", Pattern.DOTALL); // Pattern.DOTALL means dot can match new lines as well.
 
+	// Mods know the fact that sometimes bots manage to reply.
+	// Therefore we use some offensive replies since they seem to work just fine!
 	private static final String RANDOM_REPLIES[] = {
 		"Atstok",
 		"Atsipisk bl",
+		"pisk tu nx",
+		"wtf",
+		"ko tu nx nori?",
+		"pisau as ant taves",
+		"suka tu nx",
 		"Neuzpisk",
 		"Eik nx",
 		"Durnas?",

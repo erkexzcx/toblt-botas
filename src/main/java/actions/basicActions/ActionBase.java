@@ -8,11 +8,17 @@ public abstract class ActionBase {
 
 	protected Document doc;
 	protected Bot bot;
-	protected final String baseUrl;
+	protected String baseUrl;
+	protected Item item;
 
 	public ActionBase(Bot bot, Item item) {
 		this.bot = bot;
+		this.item = item;
 		this.baseUrl = bot.insertCredentials(getBaseUrl()) + item.getId();
+	}
+	
+	public Item getItem(){
+		return item;
 	}
 
 	protected String actionUrl() {
