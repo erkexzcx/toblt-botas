@@ -1,42 +1,47 @@
 package actions;
 
-import actions.basicActions.PickingToolAction;
 import core.*;
 
-public class Kasimas extends PickingToolAction {
+public class Kasimas extends Action {
 
 	public Kasimas(Bot bot, Item item) {
-		super(bot, item);
+		super(
+				bot,
+				"http://tob.lt/kasimas_kalve.php?{CREDENTIALS}&id=mininu0&ka=" + item.getId()
+		);
 	}
 
 	@Override
-	public boolean isInventoryFull() {
-		return doc.html().contains("Jūsų inventorius jau pilnas!");
+	protected int preChecks() {
+		return RES_SUCCESS;
 	}
 
 	@Override
-	public boolean isMissingTool() {
-		return doc.html().contains("Neturite reikalingo kirtiklio!");
+	protected int postChecks() {
+
+		if (doc.html().contains("Jūsų kiti lygiai per žemi!")) {
+			return RES_OTHER_LEVELS_TOO_LOW;
+		}
+
+		if (doc.html().contains("Jūsų kasimo lygis per žemas")) {
+			return RES_LEVEL_TOO_LOW;
+		}
+
+		if (doc.html().contains("Neturite reikalingo kirtiklio!")) {
+			return RES_MISSING_TOOL;
+		}
+
+		if (doc.html().contains("Jūsų inventorius jau pilnas!")) {
+			return RES_INVENTORY_FULL;
+		}
+
+		return RES_SUCCESS;
+
 	}
 
 	@Override
 	public boolean isSuccessful() {
 		return doc.html().contains("Iškasta:");
-	}
-
-	@Override
-	public boolean isLevelTooLow() {
-		return doc.html().contains("Jūsų kasimo lygis per žemas");
-	}
-
-	@Override
-	public boolean isOtherLevelsTooLow() {
-		return doc.html().contains("");
-	}
-
-	@Override
-	public String getBaseUrl() {
-		return "http://tob.lt/kasimas_kalve.php?{CREDENTIALS}&id=mininu0&ka=";
 	}
 
 }

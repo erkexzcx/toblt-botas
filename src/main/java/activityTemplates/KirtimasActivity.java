@@ -1,7 +1,6 @@
 package activityTemplates;
 
 import actions.*;
-import actions.exceptions.*;
 import core.*;
 
 public class KirtimasActivity extends ActivityBase {
@@ -19,18 +18,24 @@ public class KirtimasActivity extends ActivityBase {
 	protected void startActivity() {
 		while (!stopFlag) {
 
-			try {
-				kirtimas.perform();
-			} catch (InventoryFullException ex) {
-				bot.shop().sell(itemToSell);
-			} catch (LevelTooLowException ex) {
-				bot.stopActivity(this.getClass().getName() + " level is too low!");
-			} catch (OtherLevelsTooLowException ex) {
-				// TODO
-			} catch (ResultFailException ex) {
-				bot.stopActivity("Unable to confirm successful action: " + this.getClass().getName());
-			} catch (MissingToolException ex) {
-				bot.stopActivity(this.getClass().getName() + " does not have required tool to perform this action!");
+			switch (kirtimas.perform()) {
+				case Action.RES_SUCCESS:
+					break;
+				case Action.RES_INVENTORY_FULL:
+					bot.shop().sell(itemToSell);
+					break;
+				case Action.RES_OTHER_LEVELS_TOO_LOW:
+					resOtherLevelsTooLow(kirtimas);
+					break;
+				case Action.RES_LEVEL_TOO_LOW:
+					resLevelTooLow(kirtimas);
+					break;
+				case Action.RES_MISSING_TOOL:
+					resMissingTool(kirtimas);
+					break;
+				default:
+					resFailure(kirtimas);
+					break;
 			}
 
 		}

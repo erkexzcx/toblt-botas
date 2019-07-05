@@ -1,17 +1,14 @@
 package actions;
 
-import actions.basicActions.UsingMaterialsAction;
 import core.*;
 
-public class Crafting extends UsingMaterialsAction {
+public class Crafting extends Action {
 
 	public Crafting(Bot bot, Item item) {
-		super(bot, item);
-	}
-
-	@Override
-	public boolean isNotEnoughMaterials() {
-		return doc.html().contains("Neužtenka žaliavų!");
+		super(
+				bot,
+				"http://tob.lt/dirbtuves.php?{CREDENTIALS}&id=gaminu0&ka=" + item.getId()
+		);
 	}
 
 	@Override
@@ -20,18 +17,29 @@ public class Crafting extends UsingMaterialsAction {
 	}
 
 	@Override
-	public boolean isLevelTooLow() {
-		return doc.html().contains("Jūsų crafting lygis per žemas.");
+	protected int preChecks() {
+
+		if (doc.html().contains("Neužtenka žaliavų!")) {
+			return RES_OUT_OF_MATERIALS;
+		}
+
+		return RES_SUCCESS;
+
 	}
 
 	@Override
-	public boolean isOtherLevelsTooLow() {
-		return false;
-	}
+	protected int postChecks() {
 
-	@Override
-	public String getBaseUrl() {
-		return "http://tob.lt/dirbtuves.php?{CREDENTIALS}&id=gaminu0&ka=";
+		if (doc.html().contains("Jūsų kiti lygiai per žemi!")) {
+			return RES_OTHER_LEVELS_TOO_LOW;
+		}
+
+		if (doc.html().contains("Jūsų crafting lygis per žemas.")) {
+			return RES_LEVEL_TOO_LOW;
+		}
+
+		return RES_SUCCESS;
+
 	}
 
 }

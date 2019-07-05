@@ -1,11 +1,7 @@
 package activityTemplates;
 
 import actions.*;
-import actions.exceptions.InventoryFullException;
-import actions.exceptions.LevelTooLowException;
-import actions.exceptions.MissingToolException;
-import actions.exceptions.OtherLevelsTooLowException;
-import actions.exceptions.ResultFailException;
+import actions.Action;
 import core.*;
 
 public class KasimasActivity extends ActivityBase {
@@ -23,19 +19,25 @@ public class KasimasActivity extends ActivityBase {
 	protected void startActivity() {
 		while (!stopFlag) {
 			
-			try {
-				kasimas.perform();
-			} catch (InventoryFullException ex) {
-				bot.shop().sellEverythingByCategory("neapdirbtas brangakmenis");
-				bot.shop().sell(itemToSell);
-			} catch (LevelTooLowException ex) {
-				bot.stopActivity(this.getClass().getName() + " level is too low!");
-			} catch (OtherLevelsTooLowException ex) {
-				// TODO
-			} catch (ResultFailException ex) {
-				bot.stopActivity("Unable to confirm successful action: " + this.getClass().getName());
-			} catch (MissingToolException ex) {
-				bot.stopActivity(this.getClass().getName() + " does not have required tool to perform this action!");
+			switch (kasimas.perform()) {
+				case Action.RES_SUCCESS:
+					break;
+				case Action.RES_INVENTORY_FULL:
+					bot.shop().sellEverythingByCategory("neapdirbtas brangakmenis");
+					bot.shop().sell(itemToSell);
+					break;
+				case Action.RES_OTHER_LEVELS_TOO_LOW:
+					resOtherLevelsTooLow(kasimas);
+					break;
+				case Action.RES_LEVEL_TOO_LOW:
+					resLevelTooLow(kasimas);
+					break;
+				case Action.RES_MISSING_TOOL:
+					resMissingTool(kasimas);
+					break;
+				default:
+					resFailure(kasimas);
+					break;
 			}
 
 		}

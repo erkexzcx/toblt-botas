@@ -1,12 +1,16 @@
-package actions;
+package misc;
 
-import actions.exceptions.*;
 import core.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jsoup.nodes.Document;
 
 public class Slayer {
+
+	public static final int RES_SUCCESS = 0;
+	public static final int RES_FAILURE = 1;
+	public static final int RES_ALREADY_IN_PROGRESS = 2;
+	public static final int RES_LEVEL_TOO_LOW = 3;
 
 	public static final String KILL_1_10 = "http://tob.lt/slayer.php?{CREDENTIALS}&id=task&nr=1";
 	public static final String KILL_11_30 = "http://tob.lt/slayer.php?{CREDENTIALS}&id=task&nr=2";
@@ -18,7 +22,7 @@ public class Slayer {
 	public static final String KILL_261_350 = "http://tob.lt/slayer.php?{CREDENTIALS}&id=task&nr=8";
 
 	private static final Pattern EXTRACT_REMAINING_COUNT_PATTERN = Pattern.compile("Dar turite nužudyti:\\s+<b>(\\d+)</b>", Pattern.MULTILINE);
-	
+
 	private static final String BASE_URL = "http://tob.lt/slayer.php?{CREDENTIALS}&id=";
 
 	private final String baseUrl;
@@ -30,32 +34,26 @@ public class Slayer {
 		this.bot = bot;
 		this.baseUrl = bot.insertCredentials(BASE_URL);
 		questUrl = baseUrl + what;
-		
+
 	}
 
-	public void startQuest() throws SlayerAlreadyInProgressException, LevelTooLowException, ResultFailException {
-		
+	public int startQuest() {
+
 		// Load twice to prevent random messages for the user in the game:
 		bot.navigator().navigate(questUrl, Navigator.NAVIGATION_TYPE_REGULAR);
 		doc = bot.navigator().navigate(questUrl, Navigator.NAVIGATION_TYPE_REGULAR);
 
 		if (doc.html().contains("Jums sėkmingai paskirta užduotis!")) {
-			return;
+			return RES_SUCCESS;
 		}
-		
 		if (doc.html().contains("Jums jau išrasyta užduotis, prašome ją įvykdyti arba atšaukti.")) {
-			throw new SlayerAlreadyInProgressException();
+			return RES_ALREADY_IN_PROGRESS;
 		}
 		if (doc.html().contains("Jūsų slayer lygis per žemas!")) {
-			throw new LevelTooLowException();
+			return RES_LEVEL_TOO_LOW;
 		}
-		throw new ResultFailException();
+		return RES_FAILURE;
 
-	}
-
-	private boolean isInProgress() {
-		doc = bot.navigator().navigate(baseUrl, Navigator.NAVIGATION_TYPE_REGULAR);
-		return doc.html().contains("Jūs turite užduotį!");
 	}
 
 	public int enemiesLeft() {
@@ -71,6 +69,11 @@ public class Slayer {
 		}
 		String count = m.group(1);
 		return Integer.parseInt(count);
+	}
+
+	private boolean isInProgress() {
+		doc = bot.navigator().navigate(baseUrl, Navigator.NAVIGATION_TYPE_REGULAR);
+		return doc.html().contains("Jūs turite užduotį!");
 	}
 
 }

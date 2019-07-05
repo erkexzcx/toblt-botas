@@ -1,7 +1,6 @@
 package activityTemplates;
 
 import actions.*;
-import actions.exceptions.*;
 import core.*;
 
 public class KasimasLydimasActivity extends ActivityBase {
@@ -21,19 +20,24 @@ public class KasimasLydimasActivity extends ActivityBase {
 	protected void startActivity() {
 		while (!stopFlag) {
 
-			try {
-				kasimas.perform();
-			} catch (InventoryFullException ex) {
-				bot.shop().sellEverythingByCategory("neapdirbtas brangakmenis");
-				meltItems();
-			} catch (LevelTooLowException ex) {
-				bot.stopActivity(this.getClass().getName() + " level is too low!");
-			} catch (OtherLevelsTooLowException ex) {
-				// TODO
-			} catch (ResultFailException ex) {
-				bot.stopActivity("Unable to confirm successful action: " + kasimas.getClass().getName());
-			} catch (MissingToolException ex) {
-				bot.stopActivity(this.getClass().getName() + " does not have required tool to perform this action!");
+			switch (kasimas.perform()) {
+				case Action.RES_SUCCESS:
+					break;
+				case Action.RES_INVENTORY_FULL:
+					meltItems();
+					break;
+				case Action.RES_OTHER_LEVELS_TOO_LOW:
+					resOtherLevelsTooLow(kasimas);
+					break;
+				case Action.RES_LEVEL_TOO_LOW:
+					resLevelTooLow(kasimas);
+					break;
+				case Action.RES_MISSING_TOOL:
+					resMissingTool(kasimas);
+					break;
+				default:
+					resFailure(kasimas);
+					break;
 			}
 
 		}
@@ -42,17 +46,22 @@ public class KasimasLydimasActivity extends ActivityBase {
 	private void meltItems() {
 		while (!stopFlag) {
 
-			try {
-				lydimas.perform();
-			} catch (LevelTooLowException ex) {
-				bot.stopActivity(this.getClass().getName() + " level is too low!");
-			} catch (OtherLevelsTooLowException ex) {
-				// TODO
-			} catch (ResultFailException ex) {
-				bot.stopActivity("Unable to confirm successful action: " + lydimas.getClass().getName());
-			}catch (NotEnoughMaterialsException ex) {
-				bot.shop().sell(itemToSell);
-				break;
+			switch (lydimas.perform()) {
+				case Action.RES_SUCCESS:
+					break;
+				case Action.RES_OUT_OF_MATERIALS:
+					bot.shop().sellEverythingByCategory("neapdirbtas brangakmenis");
+					bot.shop().sell(itemToSell);
+					return;
+				case Action.RES_OTHER_LEVELS_TOO_LOW:
+					resOtherLevelsTooLow(lydimas);
+					break;
+				case Action.RES_LEVEL_TOO_LOW:
+					resLevelTooLow(lydimas);
+					break;
+				default:
+					resFailure(lydimas);
+					break;
 			}
 
 		}

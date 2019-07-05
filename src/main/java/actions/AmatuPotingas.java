@@ -1,20 +1,14 @@
 package actions;
 
-import actions.basicActions.UsingMaterialsAction;
 import core.*;
 
-public final class AmatuPotingas extends UsingMaterialsAction {
+public final class AmatuPotingas extends Action {
 
 	public AmatuPotingas(Bot bot, Item item) {
-		super(bot, item);
-		
-		//override base URL:
-		baseUrl = bot.insertCredentials(getBaseUrl()) + item.getId().replace("PA", "");
-	}
-
-	@Override
-	public boolean isNotEnoughMaterials() {
-		return doc.html().contains("Nepakanka reikiamų grybų!");
+		super(
+				bot,
+				"http://tob.lt/namai.php?{CREDENTIALS}&id=amatupotion02&ka=" + item.getId().replace("PA", "")
+		);
 	}
 
 	@Override
@@ -23,18 +17,29 @@ public final class AmatuPotingas extends UsingMaterialsAction {
 	}
 
 	@Override
-	public boolean isLevelTooLow() {
-		return doc.html().contains("Jūsų potingo lygis per žemas");
+	protected int preChecks() {
+
+		if (doc.html().contains("Nepakanka reikiamų grybų!")) {
+			return RES_OUT_OF_MATERIALS;
+		}
+
+		return RES_SUCCESS;
+
 	}
 
 	@Override
-	public boolean isOtherLevelsTooLow() {
-		return false;
-	}
+	protected int postChecks() {
 
-	@Override
-	public String getBaseUrl() {
-		return "http://tob.lt/namai.php?{CREDENTIALS}&id=amatupotion02&ka=";
+		if (doc.html().contains("Jūsų kiti lygiai per žemi!")) {
+			return RES_OTHER_LEVELS_TOO_LOW;
+		}
+
+		if (doc.html().contains("Jūsų potingo lygis per žemas")) {
+			return RES_LEVEL_TOO_LOW;
+		}
+
+		return RES_SUCCESS;
+
 	}
 
 }

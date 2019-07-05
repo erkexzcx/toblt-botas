@@ -1,9 +1,7 @@
 package activityTemplates;
 
-import core.Navigator;
 import core.Bot;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import subroutines.NewPMRoutine;
 
 public abstract class ActivityBase extends Thread implements Activity {
@@ -40,30 +38,21 @@ public abstract class ActivityBase extends Thread implements Activity {
 	}
 
 	protected abstract void startActivity();
-
-	protected void sell(String sellUrl) {
-
-		// First we go to that URL:
-		doc = bot.navigator().navigate(sellUrl, Navigator.NAVIGATION_TYPE_REGULAR);
-
-		// Find POST request details:
-		Element el = doc.selectFirst("input[name=\"kiekis\"][type=\"hidden\"]");
-		if (el == null) {
-			bot.sendMessage("Unable to find max amount of items to sell. Fix your code!");
-			return;
-		}
-		String formUrl = el.parent().attr("abs:action");
-		String amount = el.attr("value");
-
-		// Perform POST request:
-		doc = bot.navigator().postRequest(
-				formUrl,
-				new String[][]{
-					{"kiekis", amount},
-					{"null", "Parduoti"}
-				}
-		);
-
+	
+	protected void resOtherLevelsTooLow(Object obj){
+		bot.stopActivity("Bot's other levels are too low to perform " + obj.getClass().getSimpleName() + "! Bot ends...");
+	}
+	
+	protected void resLevelTooLow(Object obj){
+		bot.stopActivity("Bot's " + obj.getClass().getSimpleName() + " level is too low! Bot ends...");
+	}
+	
+	protected void resMissingTool(Object obj){
+		bot.stopActivity("Bot's is missing tool for " + obj.getClass().getSimpleName() + " activity! Bot ends...");
+	}
+	
+	protected void resFailure(Object obj){
+		bot.stopActivity("Bot's ended up with failure during " + obj.getClass().getSimpleName() + " activity! Fix your code and try again!");
 	}
 
 }

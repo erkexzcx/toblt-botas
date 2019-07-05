@@ -1,37 +1,43 @@
 package actions;
 
-import actions.basicActions.PickingNoToolAction;
 import core.*;
 
-public class Grybavimas extends PickingNoToolAction {
+public class Grybavimas extends Action {
 
 	public Grybavimas(Bot bot, Item item) {
-		super(bot, item);
+		super(
+				bot,
+				"http://tob.lt/miskas.php?{CREDENTIALS}&id=renkugrybus0&ka=" + item.getId()
+		);
 	}
 
 	@Override
-	public boolean isInventoryFull() {
-		return doc.html().contains("Jūsų inventorius jau pilnas!");
+	protected int preChecks() {
+		return RES_SUCCESS;
 	}
 
 	@Override
-	public boolean isLevelTooLow() {
-		return doc.html().contains("Jūsų grybavimo lygis per žemas.");
+	protected int postChecks() {
+
+		if (doc.html().contains("Jūsų kiti lygiai per žemi!")) {
+			return RES_OTHER_LEVELS_TOO_LOW;
+		}
+
+		if (doc.html().contains("Jūsų grybavimo lygis per žemas.")) {
+			return RES_LEVEL_TOO_LOW;
+		}
+
+		if (doc.html().contains("Jūsų inventorius jau pilnas!")) {
+			return RES_INVENTORY_FULL;
+		}
+
+		return RES_SUCCESS;
+
 	}
 
 	@Override
 	public boolean isSuccessful() {
 		return doc.html().contains("Grybas paimtas:");
-	}
-
-	@Override
-	public boolean isOtherLevelsTooLow() {
-		return false; // TODO
-	}
-
-	@Override
-	public String getBaseUrl() {
-		return "http://tob.lt/miskas.php?{CREDENTIALS}&id=renkugrybus0&ka=";
 	}
 
 }

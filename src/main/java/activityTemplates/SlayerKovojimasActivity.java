@@ -1,8 +1,7 @@
 package activityTemplates;
 
-import actions.Kovojimas;
-import actions.Slayer;
-import actions.exceptions.*;
+import actions.*;
+import misc.Slayer;
 import core.Bot;
 
 public class SlayerKovojimasActivity extends ActivityBase {
@@ -21,35 +20,46 @@ public class SlayerKovojimasActivity extends ActivityBase {
 
 		int remaining = slayer.enemiesLeft();
 		if (remaining == 0) {
-			try {
-				slayer.startQuest();
-			} catch (SlayerAlreadyInProgressException ex) {
-				bot.stopActivity("Slayer quest is already in progress, but we attempted to start it. Fix code!");
-			} catch (LevelTooLowException ex) {
-				bot.stopActivity(slayer.getClass().getName() + " level is too low!");
-			} catch (ResultFailException ex) {
-				bot.stopActivity("Unable to confirm successful action: " + slayer.getClass().getName());
+			switch (slayer.startQuest()) {
+				case Slayer.RES_SUCCESS:
+					break;
+				case Slayer.RES_ALREADY_IN_PROGRESS:
+					bot.stopActivity("Slayer quest is already in progress, but we attempted to start it. Fix your code!");
+					break;
+				case Slayer.RES_LEVEL_TOO_LOW:
+					bot.stopActivity(slayer.getClass().getSimpleName() + " level is too low!");
+					break;
+				default:
+					resFailure(slayer);
+					break;
 			}
 			remaining = slayer.enemiesLeft();
 		}
 
 		while (!stopFlag) {
 
-			try {
-				kovojimas.perform();
-			} catch (ResultFailException ex) {
-				bot.stopActivity("Unable to confirm successful action: " + kovojimas.getClass().getName());
+			int res = kovojimas.perform();
+			switch (res) {
+				case Action.RES_SUCCESS:
+					break;
+				default:
+					resFailure(kovojimas);
+					break;
 			}
 
 			if (--remaining == 0) {
-				try {
-					slayer.startQuest();
-				} catch (SlayerAlreadyInProgressException ex) {
-					bot.stopActivity("Slayer quest is already in progress, but we attempted to start it. Fix code!");
-				} catch (LevelTooLowException ex) {
-					bot.stopActivity(slayer.getClass().getName() + " level is too low!");
-				} catch (ResultFailException ex) {
-					bot.stopActivity("Unable to confirm successful action: " + slayer.getClass().getName());
+				switch (slayer.startQuest()) {
+					case Slayer.RES_SUCCESS:
+						break;
+					case Slayer.RES_ALREADY_IN_PROGRESS:
+						bot.stopActivity("Slayer quest is already in progress, but we attempted to start it. Fix your code!");
+						break;
+					case Slayer.RES_LEVEL_TOO_LOW:
+						bot.stopActivity(slayer.getClass().getSimpleName() + " level is too low!");
+						break;
+					default:
+						resFailure(slayer);
+						break;
 				}
 				remaining = slayer.enemiesLeft();
 			}

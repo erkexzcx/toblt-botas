@@ -1,7 +1,6 @@
 package activityTemplates;
 
 import actions.*;
-import actions.exceptions.*;
 import core.*;
 
 public class GrybavimasAmatuPotingasActivity extends ActivityBase {
@@ -21,16 +20,22 @@ public class GrybavimasAmatuPotingasActivity extends ActivityBase {
 	protected void startActivity() {
 		while (!stopFlag) {
 
-			try {
-				grybavimas.perform();
-			} catch (InventoryFullException ex) {
-				makePotions();
-			} catch (LevelTooLowException ex) {
-				bot.stopActivity(this.getClass().getName() + " level is too low!");
-			} catch (OtherLevelsTooLowException ex) {
-				// TODO
-			} catch (ResultFailException ex) {
-				bot.stopActivity("Unable to confirm successful action: " + this.getClass().getName());
+			int res = grybavimas.perform();
+			switch (res) {
+				case Action.RES_SUCCESS:
+					break;
+				case Action.RES_INVENTORY_FULL:
+					makePotions();
+					break;
+				case Action.RES_OTHER_LEVELS_TOO_LOW:
+					resOtherLevelsTooLow(grybavimas);
+					break;
+				case Action.RES_LEVEL_TOO_LOW:
+					resLevelTooLow(grybavimas);
+					break;
+				default:
+					resFailure(grybavimas);
+					break;
 			}
 
 		}
@@ -38,18 +43,22 @@ public class GrybavimasAmatuPotingasActivity extends ActivityBase {
 
 	private void makePotions() {
 		while (!stopFlag) {
-
-			try {
-				amatuPotingas.perform();
-			} catch (LevelTooLowException ex) {
-				bot.stopActivity(amatuPotingas.getClass().getName() + " level is too low!");
-			} catch (OtherLevelsTooLowException ex) {
-				// TODO
-			} catch (ResultFailException ex) {
-				bot.stopActivity("Unable to confirm successful action: " + amatuPotingas.getClass().getName());
-			} catch (NotEnoughMaterialsException ex) {
-				bot.shop().sell(itemToSell);
-				break;
+			
+			switch (amatuPotingas.perform()) {
+				case Action.RES_SUCCESS:
+					break;
+				case Action.RES_OUT_OF_MATERIALS:
+					bot.shop().sell(itemToSell);
+					return;
+				case Action.RES_OTHER_LEVELS_TOO_LOW:
+					resOtherLevelsTooLow(amatuPotingas);
+					break;
+				case Action.RES_LEVEL_TOO_LOW:
+					resLevelTooLow(amatuPotingas);
+					break;
+				default:
+					resFailure(amatuPotingas);
+					break;
 			}
 
 		}

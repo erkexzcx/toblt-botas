@@ -15,18 +15,24 @@ public class NewPMRoutine extends Routine {
 	// Mods know the fact that sometimes bots manage to reply.
 	// Therefore we use some offensive replies since they seem to work just fine!
 	private static final String RANDOM_REPLIES[] = {
-		"Atstok",
-		"Atsipisk bl",
-		"pisk tu nx",
+		"eik tiktais nepeizejes ce man",
 		"wtf",
-		"ko tu nx nori?",
-		"pisau as ant taves",
+		"sakyk ko nx nori?",
+		"bbd",
 		"suka tu nx",
 		"Neuzpisk",
 		"Eik nx",
 		"Durnas?",
 		"Kas tau su galva negerai?",
-		"Dx tu"
+		"Dx tu",
+		"velnias tu",
+		"netrugdyk veiksmuot",
+		"eik pats zinai kur",
+		"nebuk lopas, ok?",
+		"nebuk lopas",
+		"ko cia rasineji man?",
+		"ko ce rasineji",
+		"ko ce rasineji?"
 	};
 
 	private Document doc;

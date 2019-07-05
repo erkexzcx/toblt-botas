@@ -1,20 +1,14 @@
 package actions;
 
-import actions.basicActions.UsingMaterialsAction;
 import core.*;
 
-public final class BrangakmeniuApdirbimas extends UsingMaterialsAction {
+public final class BrangakmeniuApdirbimas extends Action {
 
 	public BrangakmeniuApdirbimas(Bot bot, Item item) {
-		super(bot, item);
-		
-		// Change item ID required for baseUrl:
-		baseUrl = bot.insertCredentials(getBaseUrl()) + item.getId().replace("NB", "AB");
-	}
-
-	@Override
-	public boolean isNotEnoughMaterials() {
-		return doc.html().contains("Neužtenka neapdirbtų akmenų!");
+		super(
+				bot,
+				"http://tob.lt/dirbtuves.php?{CREDENTIALS}&id=bapd0&ka=" + item.getId().replace("NB", "AB")
+		);
 	}
 
 	@Override
@@ -23,18 +17,29 @@ public final class BrangakmeniuApdirbimas extends UsingMaterialsAction {
 	}
 
 	@Override
-	public boolean isLevelTooLow() {
-		return doc.html().contains("Jūsų juvelyrikos lygis per žemas.");
+	protected int preChecks() {
+
+		if (doc.html().contains("Neužtenka neapdirbtų akmenų!")) {
+			return RES_OUT_OF_MATERIALS;
+		}
+
+		return RES_SUCCESS;
+
 	}
 
 	@Override
-	public boolean isOtherLevelsTooLow() {
-		return false;
-	}
+	protected int postChecks() {
 
-	@Override
-	public String getBaseUrl() {
-		return "http://tob.lt/dirbtuves.php?{CREDENTIALS}&id=bapd0&ka=";
+		if (doc.html().contains("Jūsų kiti lygiai per žemi!")) {
+			return RES_OTHER_LEVELS_TOO_LOW;
+		}
+
+		if (doc.html().contains("Jūsų juvelyrikos lygis per žemas.")) {
+			return RES_LEVEL_TOO_LOW;
+		}
+
+		return RES_SUCCESS;
+
 	}
 
 }

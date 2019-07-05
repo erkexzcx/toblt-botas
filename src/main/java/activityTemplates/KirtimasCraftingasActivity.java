@@ -1,7 +1,6 @@
 package activityTemplates;
 
 import actions.*;
-import actions.exceptions.*;
 import core.*;
 
 public class KirtimasCraftingasActivity extends ActivityBase {
@@ -21,18 +20,24 @@ public class KirtimasCraftingasActivity extends ActivityBase {
 	protected void startActivity() {
 		while (!stopFlag) {
 
-			try {
-				kirtimas.perform();
-			} catch (InventoryFullException ex) {
-				craftItems();
-			} catch (LevelTooLowException ex) {
-				bot.stopActivity(this.getClass().getName() + " level is too low!");
-			} catch (OtherLevelsTooLowException ex) {
-				// TODO
-			} catch (ResultFailException ex) {
-				bot.stopActivity("Unable to confirm successful action: " + kirtimas.getClass().getName());
-			} catch (MissingToolException ex) {
-				bot.stopActivity(this.getClass().getName() + " does not have required tool to perform this action!");
+			switch (kirtimas.perform()) {
+				case Action.RES_SUCCESS:
+					break;
+				case Action.RES_INVENTORY_FULL:
+					craftItems();
+					break;
+				case Action.RES_OTHER_LEVELS_TOO_LOW:
+					resOtherLevelsTooLow(kirtimas);
+					break;
+				case Action.RES_LEVEL_TOO_LOW:
+					resLevelTooLow(kirtimas);
+					break;
+				case Action.RES_MISSING_TOOL:
+					resMissingTool(kirtimas);
+					break;
+				default:
+					resFailure(kirtimas);
+					break;
 			}
 
 		}
@@ -41,17 +46,21 @@ public class KirtimasCraftingasActivity extends ActivityBase {
 	private void craftItems() {
 		while (!stopFlag) {
 
-			try {
-				crafting.perform();
-			} catch (LevelTooLowException ex) {
-				bot.stopActivity(this.getClass().getName() + " level is too low!");
-			} catch (OtherLevelsTooLowException ex) {
-				// TODO
-			} catch (ResultFailException ex) {
-				bot.stopActivity("Unable to confirm successful action: " + crafting.getClass().getName());
-			}catch (NotEnoughMaterialsException ex) {
-				bot.shop().sell(itemToSell);
-				break;
+			switch (crafting.perform()) {
+				case Action.RES_SUCCESS:
+					break;
+				case Action.RES_OUT_OF_MATERIALS:
+					bot.shop().sell(itemToSell);
+					return;
+				case Action.RES_OTHER_LEVELS_TOO_LOW:
+					resOtherLevelsTooLow(crafting);
+					break;
+				case Action.RES_LEVEL_TOO_LOW:
+					resLevelTooLow(crafting);
+					break;
+				default:
+					resFailure(crafting);
+					break;
 			}
 
 		}
