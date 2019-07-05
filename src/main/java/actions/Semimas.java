@@ -8,7 +8,7 @@ public class Semimas extends Action {
 	public Semimas(Bot bot) {
 		super(
 				bot,
-				"http://tob.lt/zvejoti.php?{CREDENTIALS}&id=VA1"
+				"http://tob.lt/zvejoti.php?{CREDENTIALS}&id="
 		);
 	}
 

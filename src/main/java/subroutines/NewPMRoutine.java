@@ -93,7 +93,7 @@ public class NewPMRoutine extends Routine {
 			return;
 		}
 		if ("nothing".equals(receivedReplyFromRealUser.toLowerCase())) {
-			// User don't want to reply:
+			bot.sendMessage("OK. Ignoring message...");
 			return;
 		}
 

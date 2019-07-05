@@ -8,14 +8,17 @@ import org.jsoup.nodes.Element;
 public class Shop {
 
 	private static final String QUICK_SHOP_SELL_URL = "http://tob.lt/parda.php?{CREDENTIALS}&id=universali2&psl=1&ka=";
+	private static final String PLAYER_MARKET_SUBMIT_URL = "http://tob.lt/aukcijonas.php?{CREDENTIALS}&id=dedu";
 
 	private final Bot bot;
 	private Document doc;
 	private final String quickShopUrlIncomplete;
+	private final String playerMarketSubmitUrl;
 
 	public Shop(Bot bot) {
 		this.bot = bot;
 		quickShopUrlIncomplete = bot.insertCredentials(QUICK_SHOP_SELL_URL);
+		playerMarketSubmitUrl = bot.insertCredentials(PLAYER_MARKET_SUBMIT_URL);
 	}
 
 	public void sell(Item item) {
@@ -87,6 +90,39 @@ public class Shop {
 			}
 			sell(item);
 		}
+	}
+
+	public void putIntoPlayerMarket(Item item, String pricePerItem) {
+		List<Item> items = bot.inventory().getAll();
+		item.setCount(0);
+		for (Item itm : items) {
+			if (itm.getId().equals(item.getId())) {
+				item.setCount(itm.getCount());
+				break;
+			}
+		}
+		if (item.getCount() == 0) {
+			bot.sendMessage("Nothing to sell, but we were suppossed to sell " + item + ". Fix your code!");
+			return; // Nothing to sell - error.
+		}
+		
+		// TODO - there is strange feature in game when you have more items in
+		// your inventory - you can't put anything into player market. This needs
+		// additional check or player will never put anything into inventory.
+
+		doc = bot.navigator().postRequest(
+				playerMarketSubmitUrl,
+				new String[][]{
+					{"kan", item.getId()},
+					{"page", String.format("%d", item.getCount())},
+					{"kj", pricePerItem},
+					{"val", "10"},
+					{"kam", ""},
+					{"null", "Dėti"}
+				}
+		);
+		System.out.println(doc.html());
+
 	}
 
 }
