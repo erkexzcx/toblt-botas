@@ -2,6 +2,9 @@
 
 Demonstracinė versija. Daug dalykų neužbaigta.
 
+ - Dėl developmento skaityti [čia](https://github.com/erkexzcx/toblt-botas/blob/master/Development.md#for-developers).
+ - Veiksmų sąrašas yra [čia](https://github.com/erkexzcx/toblt-botas/blob/master/Usage.md).
+
 ### Galimybės
   - Veiksmuoti. Daug, įvairiai ir gerai veiksmuoti
   - Apeiti anti bot patikrinimus
@@ -71,13 +74,15 @@ Galiausiai paleidziama veiksmavima:
 ```
 b1.setActivity(activity).startActivity();
 ```
-Paaiskinimas:
+Paaiškinimas:
   - `b1` - zaidejo objektas.
   - `kasimas` - vienas is `KasimasLydimasActivity` dalių.
   - `lydimas` - vienas is `KasimasLydimasActivity` dalių.
   - `plytele` - galutinis veiksmavimo produktas, kuri botas automatiškai pardavinės užsipildžius inventoriui.
   - `activity` - Veiksmavimo objektas.
-
+  
+Galimų veiksmų sąrašas yra [čia](https://github.com/erkexzcx/toblt-botas/blob/master/Usage.md).
+.
 ### Papildoma informacija apie autokėlėjų naudojimą
   - Moderatoriai kartais trina jūsų acc net neatsiklausę jeigu paliekate visiškai naują acc tik kovoti ir surenkate kelis tūkstančius veiksmų. Reikia kelti visus lygius po truputį ir viskas bus gerai.
   - Kartais galima gauti IP ban su acc ištrynimu.
