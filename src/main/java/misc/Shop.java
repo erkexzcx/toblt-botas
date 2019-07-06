@@ -121,7 +121,6 @@ public class Shop {
 					{"null", "Dėti"}
 				}
 		);
-		System.out.println(doc.html());
 
 	}
 
